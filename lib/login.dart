@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'registration.dart';
+import 'home.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -9,12 +11,29 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _unfocusedColor = Colors.white;
+
 
   @override
   // ignore: missing_return
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.person_add),
+
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Registration())
+                  );
+                },
+
+              );
+            }
+        ),
+      ),
       body: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -39,7 +58,7 @@ class _LoginState extends State<Login> {
                 ],
               ),
               SizedBox(
-                height: 160.0,
+                height: 120.0,
               ),
               TextField(
                 controller: _usernameController,
@@ -92,9 +111,10 @@ class _LoginState extends State<Login> {
                       shape: BeveledRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10.0)),
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      })
+                    onPressed: () {
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => MyHomePage()));
+                    },)
                 ],
               ),
             ],
