@@ -1,6 +1,6 @@
-import 'package:assurance/login.dart';
+
 import 'package:flutter/material.dart';
-import 'category.dart';
+
 import 'menu.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -42,22 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.black,
               iconSize: 28.0,
               onPressed: null),
-          IconButton(
-              icon: Icon(Icons.category),
-              color: Colors.black,
-              iconSize: 28.0,
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Category()));
-              }),
-          IconButton(
-              icon: Icon(Icons.logout),
-              color: Colors.black,
-              iconSize: 28.0,
-              onPressed: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Login()));
-              }),
+
         ],
       ),
       body: Container(

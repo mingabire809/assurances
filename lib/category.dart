@@ -1,6 +1,14 @@
-import 'package:assurance/home.dart';
+import 'package:assurance/business.dart';
+import 'package:assurance/car.dart';
+import 'package:assurance/disability.dart';
+
+import 'package:assurance/house.dart';
+import 'package:assurance/life.dart';
+import 'package:assurance/medical.dart';
+import 'package:assurance/menu.dart';
+import 'package:assurance/pension.dart';
 import 'package:flutter/material.dart';
-import 'home.dart';
+
 
 class Category extends StatefulWidget {
   @override
@@ -19,7 +27,7 @@ class _CategoryState extends State<Category> {
             onPressed: () {
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MyHomePage())
+                  MaterialPageRoute(builder: (context) => Menu())
               );
             },
 
@@ -39,43 +47,84 @@ class _CategoryState extends State<Category> {
                 Icons.healing,
               ),
               title: Text("Medical Cover"),
-              onTap: () =>
-                  Navigator.of(context).push(_NewPage("Medical Cover")),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Medical()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(
                 Icons.home,
               ),
               title: Text("House"),
-              onTap: () => Navigator.of(context).push(_NewPage("House")),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => House()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(
                 Icons.car_repair,
               ),
               title: Text("Car"),
-              onTap: () => Navigator.of(context).push(_NewPage("Car")),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Car()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(
                 Icons.business,
               ),
               title: Text("Business"),
-              onTap: () => Navigator.of(context).push(_NewPage("Business")),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Business()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(
                 Icons.person_add_disabled,
               ),
               title: Text("Disability"),
-              onTap: () => Navigator.of(context).push(_NewPage("Disability")),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Disability()),
+                );
+              },
             ),
             ListTile(
               leading: Icon(
                 Icons.person,
               ),
               title: Text("Pension"),
-              onTap: () => Navigator.of(context).push(_NewPage("Pension")),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Pension()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.person,
+              ),
+              title: Text("Life"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Life()),
+                );
+              },
             ),
           ],
         ),
@@ -86,17 +135,20 @@ class _CategoryState extends State<Category> {
   }
 }
 
-class _NewPage extends MaterialPageRoute<void> {
-  _NewPage(String id)
-      : super(builder: (BuildContext context) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                '$id',
-                style: TextStyle(color: Colors.black),
-              ),
-              elevation: 1.0,
-            ),
-          );
-        });
-}
+//class _NewPage extends MaterialPageRoute<void> {
+  //_NewPage(String id)
+    //  : super(builder: (BuildContext context) {
+      //    return Scaffold(
+        //    appBar: AppBar(
+          //    title: Text(
+            //    '$id',
+              //  style: TextStyle(color: Colors.black),
+              //),
+              //elevation: 1.0,
+            //),
+            //body: Container(
+
+            //),
+          //);
+        //});
+//}
