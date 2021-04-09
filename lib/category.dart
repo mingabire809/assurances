@@ -35,7 +35,7 @@ class _CategoryState extends State<Category> {
         }
         ),
         title: Text(
-          "Category",
+          "Cover",
           style: TextStyle(color: Colors.black),
         ),
       ),

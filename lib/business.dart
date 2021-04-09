@@ -1,7 +1,8 @@
+import 'package:assurance/register.dart';
 import 'package:flutter/material.dart';
 
 import 'category.dart';
-import 'home.dart';
+
 
 class Business extends StatefulWidget{
   @override
@@ -114,7 +115,7 @@ class _BusinessState extends State<Business>{
                   ),
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MyHomePage()));
+                        MaterialPageRoute(builder: (context) => Register()));
                   },
                 )
               ],

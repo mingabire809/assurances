@@ -1,7 +1,7 @@
+import 'package:assurance/register.dart';
 import 'package:flutter/material.dart';
 
 import 'category.dart';
-import 'home.dart';
 
 class Pension extends StatefulWidget{
   @override
@@ -87,7 +87,7 @@ class _PensionState extends State<Pension>{
                  ),
                  onPressed: () {
                    Navigator.push(context,
-                       MaterialPageRoute(builder: (context) => MyHomePage()));
+                       MaterialPageRoute(builder: (context) => Register()));
                  },
                )
              ],

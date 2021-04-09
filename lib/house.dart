@@ -1,7 +1,8 @@
+import 'package:assurance/register.dart';
 import 'package:flutter/material.dart';
 
 import 'category.dart';
-import 'home.dart';
+
 
 class House extends StatefulWidget{
   @override
@@ -98,7 +99,7 @@ class _HouseState extends State<House>{
                   ),
                   onPressed: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MyHomePage()));
+                        MaterialPageRoute(builder: (context) => Register()));
                   },
                 )
               ],

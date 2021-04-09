@@ -1,6 +1,16 @@
 
+import 'package:assurance/ascoma.dart';
+import 'package:assurance/bicor.dart';
+import 'package:assurance/businessinsurance.dart';
+import 'package:assurance/egiv.dart';
+import 'package:assurance/mfp.dart';
+import 'package:assurance/socabu.dart';
+import 'package:assurance/socar.dart';
+import 'package:assurance/solis.dart';
+import 'package:assurance/ucar.dart';
 import 'package:flutter/material.dart';
 
+import 'jubilee.dart';
 import 'menu.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -62,6 +72,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 "SOCABU",
                 style: TextStyle(color: Colors.white),
               ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Socabu()),
+                );
+              },
             ),
             ListTile(
               leading: CircleAvatar(
@@ -71,6 +87,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 "ASCOMA",
                 style: TextStyle(color: Colors.white),
               ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Ascoma()),
+                );
+              },
             ),
             ListTile(
               leading: CircleAvatar(
@@ -80,6 +102,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 "BICOR",
                 style: TextStyle(color: Colors.white),
               ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Bicor()),
+                );
+              },
             ),
             ListTile(
               leading: CircleAvatar(
@@ -89,6 +117,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 "JUBILEE",
                 style: TextStyle(color: Colors.white),
               ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Jubilee()),
+                );
+              },
             ),
             ListTile(
               leading: CircleAvatar(
@@ -98,6 +132,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 "MUTUELLE DE LA FONCTION PUBLIQUE",
                 style: TextStyle(color: Colors.white),
               ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Mfp()),
+                );
+              },
             ),
             ListTile(
               leading: CircleAvatar(
@@ -107,6 +147,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 "MUTUALITE SOLIS",
                 style: TextStyle(color: Colors.white),
               ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Solis()),
+                );
+              },
             ),
             ListTile(
               leading: CircleAvatar(
@@ -116,6 +162,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 "EAST AFRICA GLOBAL INSURANCE COMPANY NON-VIE",
                 style: TextStyle(color: Colors.white),
               ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EastAfrica()),
+                );
+              },
             ),
             ListTile(
               leading: CircleAvatar(
@@ -125,6 +177,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 "SOCAR",
                 style: TextStyle(color: Colors.white),
               ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Socar()),
+                );
+              },
             ),
             ListTile(
               leading: CircleAvatar(
@@ -134,6 +192,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 "UCAR",
                 style: TextStyle(color: Colors.white),
               ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Ucar()),
+                );
+              },
             ),
             ListTile(
               leading: CircleAvatar(
@@ -143,6 +207,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 "BUSINESS INSURANCE & REINSURANCE",
                 style: TextStyle(color: Colors.white),
               ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BusinessInsurance()),
+                );
+              },
             ),
           ],
         ),

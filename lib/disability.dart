@@ -1,7 +1,8 @@
+import 'package:assurance/register.dart';
 import 'package:flutter/material.dart';
 
 import 'category.dart';
-import 'home.dart';
+
 
 class Disability extends StatefulWidget{
   @override
@@ -61,7 +62,7 @@ class _DisabilityState extends State<Disability>{
                 ),
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyHomePage()));
+                      MaterialPageRoute(builder: (context) => Register()));
                 },
               )
             ],

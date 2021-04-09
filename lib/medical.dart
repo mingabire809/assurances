@@ -1,7 +1,8 @@
 import 'package:assurance/category.dart';
+import 'package:assurance/register.dart';
 import 'package:flutter/material.dart';
 
-import 'home.dart';
+
 
 class Medical extends StatefulWidget{
   @override
@@ -126,7 +127,7 @@ class _MedicalState extends State<Medical>{
                     ),
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MyHomePage()));
+                          MaterialPageRoute(builder: (context) => Register()));
                     },
                   )
                 ],
