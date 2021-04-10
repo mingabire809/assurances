@@ -1,7 +1,9 @@
 import 'package:assurance/about.dart';
 import 'package:assurance/category.dart';
+import 'package:assurance/locator.dart';
 import 'package:assurance/login.dart';
 import 'package:flutter/material.dart';
+import 'map.dart';
 
 class Menu extends StatelessWidget {
   const Menu({Key key}) : super(key: key);
@@ -59,6 +61,30 @@ class Menu extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => About()),
+            );
+          },
+        ),
+        ListTile(
+          leading: CircleAvatar(
+              child: Icon(Icons.map,color: Colors.white,),
+              backgroundColor: Colors.black54),
+          title: Text("Map"),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Map()),
+            );
+          },
+        ),
+        ListTile(
+          leading: CircleAvatar(
+              child: Icon(Icons.map,color: Colors.white,),
+              backgroundColor: Colors.black54),
+          title: Text("My position"),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Locator()),
             );
           },
         ),
