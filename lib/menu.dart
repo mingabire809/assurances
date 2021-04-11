@@ -11,7 +11,7 @@ class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const drawerHeader = UserAccountsDrawerHeader(
-      accountName: Text("UserName"),
+      accountName: Text("Full Name"),
       accountEmail: Text("user.name@email.com"),
       decoration: BoxDecoration(color: Colors.black38),
       currentAccountPicture: CircleAvatar(

@@ -1,6 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 
 
 
@@ -10,57 +10,74 @@ class Map extends StatefulWidget {
 }
 
 class _MapState extends State<Map> {
-  Completer<GoogleMapController> _controller = Completer();
-  MapType _currentMapType = MapType.normal;
-  static const LatLng _center = const LatLng(-1.4411128724615871, 37.04776564206081);
+  GoogleMapController mapController;
+  static final LatLng _center = const LatLng(45.521563, -122.677433);
+  final Set<Marker> _markers = {};
+  LatLng _currentMapPosition = _center;
 
-  void _onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
-  }
-  void _onMapTypeButtonPressed() {
+  void _onAddMarkerButtonPressed() {
     setState(() {
-      _currentMapType = _currentMapType == MapType.normal
-          ? MapType.satellite
-          : MapType.normal;
+      _markers.add(Marker(
+        markerId: MarkerId(_currentMapPosition.toString()),
+        position: _currentMapPosition,
+        infoWindow: InfoWindow(
+            title: 'Nice Place',
+            snippet: 'Here'
+        ),
+        icon: BitmapDescriptor.defaultMarker,
+      ));
     });
   }
+
+  void _onCameraMove(CameraPosition position) {
+    _currentMapPosition = position.target;
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Maps Sample App'),
-          backgroundColor: Colors.black38,
+          title: Text('Map'),
+          backgroundColor: Colors.blue,
         ),
         body: Stack(
           children: <Widget>[
             GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(
-                target: _center,
-                zoom: 11.0,
-              ),
-              mapType: _currentMapType,
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: CameraPosition(
+                  target: _center,
+                  zoom: 10.0,
+                ),
+                markers: _markers,
+                onCameraMove: _onCameraMove
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(14.0),
               child: Align(
                 alignment: Alignment.topRight,
                 child: FloatingActionButton(
-                  onPressed: _onMapTypeButtonPressed,
+                  onPressed: _onAddMarkerButtonPressed,
                   materialTapTargetSize: MaterialTapTargetSize.padded,
                   backgroundColor: Colors.green,
-                  child: const Icon(Icons.map, size: 36.0),
+                  child: const Icon(Icons.map, size: 30.0),
                 ),
-
               ),
             ),
+       ElevatedButton(onPressed: (){
+
+       }, child: null)
           ],
+
         ),
+
       ),
+
     );
+
   }
 }
-
-
-

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:assurance/home.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -59,13 +61,25 @@ class _JubileeState extends State<Jubilee>{
             ),
             ListTile(
               leading: CircleAvatar(
+                  child: Icon(Icons.place,color: Colors.white,),
+                  backgroundColor: Colors.black54),
+              title: Text("Location on Map"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: CircleAvatar(
                   child: Icon(Icons.question_answer_rounded,color: Colors.white,),
                   backgroundColor: Colors.black54),
               title: Text("About us"),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => About()),
+                  MaterialPageRoute(builder: (context) => AboutUs()),
                 );
               },
             ),
@@ -103,4 +117,110 @@ class _JubileeState extends State<Jubilee>{
       print(e);
     }
   }
+}
+class MapPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => MapPageState();
+}
+class MapPageState extends State<MapPage> {
+  BitmapDescriptor pinLocationIcon;
+  Set<Marker> _markers = {};
+  Completer<GoogleMapController> _controller = Completer();
+  @override
+  void initState() {
+
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        'images/jubilee.jpg').then((onValue) {
+      pinLocationIcon = onValue;
+    });
+
+  }
+  @override
+  Widget build(BuildContext context) {
+    LatLng pinPosition = LatLng(-3.382244874752131, 29.36285999980882);
+
+    // these are the minimum required values to set
+    // the camera position
+    CameraPosition initialLocation = CameraPosition(
+        zoom: 16,
+        bearing: 30,
+        target: pinPosition
+    );
+    return GoogleMap(
+        myLocationEnabled: true,
+        markers: _markers,
+        initialCameraPosition: initialLocation,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+          setState(() {
+            _markers.add(
+                Marker(
+                    markerId: MarkerId('1'),
+
+                    position: pinPosition,
+                    icon: pinLocationIcon
+                )
+            );
+          });
+        });
+  }
+
+
+}
+class AboutUs extends StatefulWidget {
+  @override
+  _AboutUsState createState() => _AboutUsState();
+
+}
+
+class _AboutUsState extends State<AboutUs>{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ListView(
+          children:<Widget> [
+            Image.asset('images/jubilee.jpg'),
+            SizedBox( height: 30.0),
+            Text("From humble beginnings in 1937, "
+                "Jubilee Insurance has spread its sphere of influence throughout"
+                " the region to become the largest multi-line insurer in."
+                "Today, Jubilee is the number one insurer in East Africa with over 250,000 clients, and over 320 employees."
+                " Jubilee Insurance is also the largest provider of medical insurance across East Africa that includes many of the region’s blue chip companies."
+                "Jubilee Insurance has a network of offices spanning Kenya, Uganda, Tanzania, Burundi and Mauritius."
+                " And now your favorite insurer will soon be a Pan-African brand, issuing our customers with "
+                "an assortment of innovative products expertly crafted to conveniently meet all your insurance needs."
+                "Jubilee is the only ISO certified insurance group listed on the three East Africa stock exchanges"
+                "• The Nairobi Stock Exchange (NSE),"
+                 "• Dar es Salaam Stock Exchange and"
+                 "• Uganda Securities Exchange."
+                  "its regional offices are highly rated on leadership,"
+                " quality and risk management and have been awarded an AA- in Kenya and Uganda, and an A+ in Tanzania.",
+              style: TextStyle(fontSize: 15.0),),
+            ListTile(
+                leading: Icon(Icons.phone),
+                title: Text("+257 22 27 58 20")
+            ),
+            ListTile(
+                leading: Icon(Icons.mail),
+                title: Text("jicb@jubileeburundi.com")
+            ),
+            ListTile(
+                leading: Icon(Icons.web),
+                title: Text("https://www.jubileeinsurance.com/bu/index.php")
+            ),
+            ListTile(
+                leading: Icon(Icons.timelapse),
+                title: Text("7:30 - 17:15")
+            ),
+
+
+          ],
+        ),
+      ),
+    );
+  }
+
+
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:assurance/home.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -59,13 +61,25 @@ class _BusinessInsuranceState extends State<BusinessInsurance>{
             ),
             ListTile(
               leading: CircleAvatar(
+                  child: Icon(Icons.place,color: Colors.white,),
+                  backgroundColor: Colors.black54),
+              title: Text("Location on Map"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: CircleAvatar(
                   child: Icon(Icons.question_answer_rounded,color: Colors.white,),
                   backgroundColor: Colors.black54),
               title: Text("About us"),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => About()),
+                  MaterialPageRoute(builder: (context) => AboutUs()),
                 );
               },
             ),
@@ -102,5 +116,117 @@ class _BusinessInsuranceState extends State<BusinessInsurance>{
     } catch (e) {
       print(e);
     }
+  }
+}
+class MapPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => MapPageState();
+}
+class MapPageState extends State<MapPage> {
+  BitmapDescriptor pinLocationIcon;
+  Set<Marker> _markers = {};
+  Completer<GoogleMapController> _controller = Completer();
+  @override
+  void initState() {
+
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        'images/bic.jpg').then((onValue) {
+      pinLocationIcon = onValue;
+    });
+
+  }
+  @override
+  Widget build(BuildContext context) {
+    LatLng pinPosition = LatLng(-3.382860084919697, 29.367783099820198);
+
+    // these are the minimum required values to set
+    // the camera position
+    CameraPosition initialLocation = CameraPosition(
+        zoom: 16,
+        bearing: 30,
+        target: pinPosition
+    );
+    return GoogleMap(
+        myLocationEnabled: true,
+        markers: _markers,
+        initialCameraPosition: initialLocation,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+          setState(() {
+            _markers.add(
+                Marker(
+                    markerId: MarkerId('1'),
+
+                    position: pinPosition,
+                    icon: pinLocationIcon
+                )
+            );
+          });
+        });
+  }
+
+
+}
+class AboutUs extends StatefulWidget {
+  @override
+  _AboutUsState createState() => _AboutUsState();
+
+}
+
+class _AboutUsState extends State<AboutUs> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ListView(
+          children: <Widget>[
+            Image.asset('images/bic.jpg'),
+            SizedBox(height: 30.0),
+            Text("",
+              style: TextStyle(fontSize: 15.0),),
+            SizedBox(height: 10.0,),
+            Text(
+              "Business Insurance and Reinsurance Company SA (BIC) a été créé "
+                  "par l’Association des Commerçants du Burundi dans les domaines de l’Assurance Automobile,"
+                  " Incendie, Accidents, Transport , Risques divers, Maladie, Prévoyance et Epargne -Pension."
+                "Notre société a pour mission de transformer le secteur de l’assurance au Burundi"
+                  " en offrant des prestations axées sur la qualité des services et "
+                  "cela dans l’intention de mieux protéger les Clients contre les risques auxquels ils sont exposés.",
+              style: TextStyle(fontSize: 15.0),),
+            SizedBox(height:10.0),
+            Text("Business Insurance & Reinsurance Company S.A. (BIC) a la vision, la mission et les valeurs suivantes."
+
+              "VISION"
+             " Devenir un leader incontestable et incontournable du Marché d’assurances au Burundi"
+                " qui soit Appréciée et Très Proche de ses Clients, avec un Service rapide et efficace."
+
+              "MISSION"
+              "Offrir des prestations axées sur la Qualité pour satisfaire les clients"
+                " en maitrisant le développement du portefeuille dans la rentabilité."
+                "NOS VALEURS"
+              "1. Ecoute et disponibilité"
+              "2. Intégrité et Equité"
+              "3. Travail d’équipe"
+              "4. Professionnalisme de haut niveau"
+              "5. Respect des engagements et efficacité de nos actions"
+              "6. Solidarité et confiance "),
+            SizedBox(height: 10.0,),
+            ListTile(
+                leading: Icon(Icons.phone),
+                title: Text("+257 2228 0042/49")
+            ),
+            ListTile(
+                leading: Icon(Icons.mail),
+                title: Text("info@bic.bi")
+            ),
+
+
+
+
+          ],
+        ),
+      ),
+    );
   }
 }

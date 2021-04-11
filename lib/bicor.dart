@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:assurance/home.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -59,13 +61,25 @@ class _BicorState extends State<Bicor>{
             ),
             ListTile(
               leading: CircleAvatar(
+                  child: Icon(Icons.place,color: Colors.white,),
+                  backgroundColor: Colors.black54),
+              title: Text("Location on Map"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: CircleAvatar(
                   child: Icon(Icons.question_answer_rounded,color: Colors.white,),
                   backgroundColor: Colors.black54),
               title: Text("About us"),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => About()),
+                  MaterialPageRoute(builder: (context) => AboutUs()),
                 );
               },
             ),
@@ -103,4 +117,91 @@ class _BicorState extends State<Bicor>{
       print(e);
     }
   }
+}
+class MapPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => MapPageState();
+}
+class MapPageState extends State<MapPage> {
+  BitmapDescriptor pinLocationIcon;
+  Set<Marker> _markers = {};
+  Completer<GoogleMapController> _controller = Completer();
+  @override
+  void initState() {
+
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        'images/bicor.png').then((onValue) {
+      pinLocationIcon = onValue;
+    });
+
+  }
+  @override
+  Widget build(BuildContext context) {
+    LatLng pinPosition = LatLng(-3.3826858748346225, 29.369123213173157);
+
+    // these are the minimum required values to set
+    // the camera position
+    CameraPosition initialLocation = CameraPosition(
+        zoom: 16,
+        bearing: 30,
+        target: pinPosition
+    );
+    return GoogleMap(
+        myLocationEnabled: true,
+        markers: _markers,
+        initialCameraPosition: initialLocation,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+          setState(() {
+            _markers.add(
+                Marker(
+                    markerId: MarkerId('1'),
+
+                    position: pinPosition,
+                    icon: pinLocationIcon
+                )
+            );
+          });
+        });
+  }
+
+
+}
+class AboutUs extends StatefulWidget {
+  @override
+  _AboutUsState createState() => _AboutUsState();
+
+}
+
+class _AboutUsState extends State<AboutUs>{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ListView(
+          children:<Widget> [
+            Image.asset('images/bicor.png'),
+            SizedBox( height: 30.0),
+            Text("Avec plus de 20 ans d’expérience, nous vous garantissons toujours les meilleurs conseils."
+                " Nous servons nos clients à tous les niveaux de leur organisation,"
+                " dans la mesure de leurs capacités, "
+                "en tant que conseillers de confiance pour les directions supérieures "
+                "ou en tant que coachs pratiques pour les employés de première ligne."
+                " Pour chaque engagement, nous formons une équipe possédant l'expérience et l'expertise appropriées les plus pertinentes. "
+                "optimiser les relations d’affaires en adaptant nos services à vos besoins particuliers.",
+              style: TextStyle(fontSize: 15.0),),
+            ListTile(
+              leading: Icon(Icons.phone),
+              title: Text("(+257) 22 22 28 20.")
+            ),
+
+
+          ],
+        ),
+      ),
+    );
+  }
+
+
 }

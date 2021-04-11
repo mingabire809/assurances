@@ -11,7 +11,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-
+  String error ;
 
   @override
   // ignore: missing_return
@@ -37,9 +37,9 @@ class _LoginState extends State<Login> {
       body: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-            image: AssetImage("images/login.jpg"),
-            fit: BoxFit.cover,
-          )),
+                image: AssetImage("images/login.jpg"),
+                fit: BoxFit.cover,
+              )),
           child: ListView(
             children: <Widget>[
               SizedBox(
@@ -76,7 +76,7 @@ class _LoginState extends State<Login> {
                 ),
 
 
-                ),
+              ),
 
               TextField(
                 controller: _passwordController,
@@ -106,19 +106,61 @@ class _LoginState extends State<Login> {
                     },
                   ),
                   RaisedButton(
-                      child: Text("Enter"),
-                      color: Colors.lightBlueAccent,
-                      shape: BeveledRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      ),
+                    child: Text("Enter"),
+                    color: Colors.lightBlueAccent,
+                    shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
                     onPressed: () {
+                      if (_usernameController.text != "Assurance" &&  _passwordController.text != "password")
+
+                      _showMyDialog();
+
+                      else
                       Navigator.push(
-                          context, MaterialPageRoute(builder: (context) => MyHomePage()));
+                      context, MaterialPageRoute(builder: (context) => MyHomePage()));
+
+
                     },)
+
                 ],
               ),
             ],
           )),
+    );
+
+  }
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+
+              children: <Widget>[
+                Icon(Icons.error),
+
+                Text('Authentication error!!',
+                textAlign: TextAlign.center)
+
+              ],
+
+            ),
+
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Retry'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

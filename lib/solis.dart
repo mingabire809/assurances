@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:assurance/home.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -59,13 +61,25 @@ class _SolisState extends State<Solis>{
             ),
             ListTile(
               leading: CircleAvatar(
+                  child: Icon(Icons.place,color: Colors.white,),
+                  backgroundColor: Colors.black54),
+              title: Text("Location on Map"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: CircleAvatar(
                   child: Icon(Icons.question_answer_rounded,color: Colors.white,),
                   backgroundColor: Colors.black54),
               title: Text("About us"),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => About()),
+                  MaterialPageRoute(builder: (context) => AboutUs()),
                 );
               },
             ),
@@ -104,4 +118,92 @@ class _SolisState extends State<Solis>{
     }
   }
 
+}
+class MapPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => MapPageState();
+}
+class MapPageState extends State<MapPage> {
+  BitmapDescriptor pinLocationIcon;
+  Set<Marker> _markers = {};
+  Completer<GoogleMapController> _controller = Completer();
+  @override
+  void initState() {
+
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        'images/solis.png').then((onValue) {
+      pinLocationIcon = onValue;
+    });
+
+  }
+  @override
+  Widget build(BuildContext context) {
+    LatLng pinPosition = LatLng(-3.3800104747291337, 29.368667770919764);
+
+    // these are the minimum required values to set
+    // the camera position
+    CameraPosition initialLocation = CameraPosition(
+        zoom: 16,
+        bearing: 30,
+        target: pinPosition
+    );
+    return GoogleMap(
+        myLocationEnabled: true,
+        markers: _markers,
+        initialCameraPosition: initialLocation,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+          setState(() {
+            _markers.add(
+                Marker(
+                    markerId: MarkerId('1'),
+
+                    position: pinPosition,
+                    icon: pinLocationIcon
+                )
+            );
+          });
+        });
+  }
+
+
+}
+class AboutUs extends StatefulWidget {
+  @override
+  _AboutUsState createState() => _AboutUsState();
+
+}
+
+class _AboutUsState extends State<AboutUs> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ListView(
+          children: <Widget>[
+            Image.asset('images/solis.png'),
+            SizedBox(height: 30.0),
+            Text("",
+              style: TextStyle(fontSize: 15.0),),
+            SizedBox(height: 10.0,),
+
+            SizedBox(height:10.0),
+            ListTile(
+                leading: Icon(Icons.phone),
+                title: Text("+257 22 27 68 13")
+            ),
+            ListTile(
+                leading: Icon(Icons.web),
+                title: Text("http://www.solis.bi/")
+            ),
+
+
+
+
+          ],
+        ),
+      ),
+    );
+  }
 }

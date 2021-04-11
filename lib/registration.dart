@@ -251,6 +251,9 @@ class _RegistrationState extends State<Registration> {
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
                   onPressed: () {
+                    if (_passwordController.text != _repasswordController.text)
+                      _showMyDialog();
+                      else
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => MyHomePage()));
                   },
@@ -260,6 +263,39 @@ class _RegistrationState extends State<Registration> {
           ],
         ),
       ),
+    );
+  }
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+
+              children: <Widget>[
+                Icon(Icons.error),
+
+                Text('Passwords do not match!!',
+                    textAlign: TextAlign.center)
+
+              ],
+
+            ),
+
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Retry'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

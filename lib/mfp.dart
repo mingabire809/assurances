@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:assurance/home.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -59,13 +61,25 @@ class _MfpState extends State<Mfp>{
             ),
             ListTile(
               leading: CircleAvatar(
+                  child: Icon(Icons.place,color: Colors.white,),
+                  backgroundColor: Colors.black54),
+              title: Text("Location on Map"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: CircleAvatar(
                   child: Icon(Icons.question_answer_rounded,color: Colors.white,),
                   backgroundColor: Colors.black54),
               title: Text("About us"),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => About()),
+                  MaterialPageRoute(builder: (context) => AboutUs()),
                 );
               },
             ),
@@ -102,5 +116,134 @@ class _MfpState extends State<Mfp>{
     } catch (e) {
       print(e);
     }
+  }
+}
+class MapPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => MapPageState();
+}
+class MapPageState extends State<MapPage> {
+  BitmapDescriptor pinLocationIcon;
+  Set<Marker> _markers = {};
+  Completer<GoogleMapController> _controller = Completer();
+  @override
+  void initState() {
+
+    BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5),
+        'images/mfp.jpg').then((onValue) {
+      pinLocationIcon = onValue;
+    });
+
+  }
+  @override
+  Widget build(BuildContext context) {
+    LatLng pinPosition = LatLng(-3.393170054897287, 29.36094179975407);
+
+    // these are the minimum required values to set
+    // the camera position
+    CameraPosition initialLocation = CameraPosition(
+        zoom: 16,
+        bearing: 30,
+        target: pinPosition
+    );
+    return GoogleMap(
+        myLocationEnabled: true,
+        markers: _markers,
+        initialCameraPosition: initialLocation,
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+          setState(() {
+            _markers.add(
+                Marker(
+                    markerId: MarkerId('1'),
+
+                    position: pinPosition,
+                    icon: pinLocationIcon
+                )
+            );
+          });
+        });
+  }
+
+
+}
+class AboutUs extends StatefulWidget {
+  @override
+  _AboutUsState createState() => _AboutUsState();
+
+}
+
+class _AboutUsState extends State<AboutUs> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: ListView(
+          children: <Widget>[
+            Image.asset('images/mfp.jpg'),
+            SizedBox(height: 30.0),
+            Text("",
+              style: TextStyle(fontSize: 15.0),),
+            SizedBox(height: 10.0,),
+            Text(
+              "La Mutuelle de la Fonction Publique gère le régime d’assurance maladie maternité"
+                  " institué en faveur des agents publics et assimilés au Burundi.",
+              style: TextStyle(fontSize: 15.0),),
+            SizedBox(height:10.0),
+            Text("La Mutuelle dela Fonction Publique a été créée par décret n°100/107 du 27 Juin 1980 "
+                "pour gérer le régime d’assurance maladie maternité institué en faveur "
+                "des agents publics et assimilés."
+                " Son rôle est d’organiser un système de soins médicaux modernes "
+                "et fiable fondé sur la participation des bénéficiaires."
+              "Les prestations couvertes par la MFP sont:"
+              "- Les consultations médicales"
+              "- Les examens de laboratoire"
+              "- Les actes chirurgicaux"
+              "- L’hospitalisation"
+              "- Les médicaments"
+              "A cet effet, des guichets d’accueil sont ouverts dans les hôpitaux partenaires ci-après :"
+              "- Clinique Prince Louis RWAGASORE"
+              "- Hôpital Prince Régent Charles"
+              "- Centre Hospitalo-Universitaire de Kamenge"
+              "- Hôpital Militaire de Kamenge"
+              "- Centre Neuropsychiatrique de Kamenge"
+              "- Hôpital de Cibitoke"
+              "- Hôpital de Kayanza"
+              "- Hôpital de Ngozi"
+              "- Hôpital de Cankuzo"
+              "- Hôpital de Ruyigi"
+              "- Hôpital de Rutana"
+              "- Hôpital de Gitega"
+              "- Hôpital de Muramvya"
+              "- Hôpital de Bururi"
+              "- Hôpital de Makamba"
+              "- Hôpital de Rumonge"
+              "La MFP collabore en outre avec les Centres de Santé publics."
+              "La MFP s'est aussi engagé à disponibiliser le médicament pour ses assurés "
+              "et pour toute la population."
+              "C'est ainsi que 30 officines pharmaceutiques sont ouvertes à travers tout le pays depuis 1989."),
+            SizedBox(height: 10.0,),
+            ListTile(
+                leading: Icon(Icons.phone),
+                title: Text("+257 22 22 30 67")
+            ),
+            ListTile(
+                leading: Icon(Icons.mail),
+                title: Text("pharma.mfp@gmail.com")
+            ),
+            ListTile(
+                leading: Icon(Icons.web),
+                title: Text("http://mfp-burundi.org/")
+            ),
+
+
+
+
+
+          ],
+        ),
+      ),
+    );
   }
 }
