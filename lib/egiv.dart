@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:assurance/home.dart';
+import 'package:assurance/partner.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -26,7 +27,7 @@ class _EastAfricaState extends State<EastAfrica>{
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => MyHomePage()));
+                  context, MaterialPageRoute(builder: (context) => Partner()));
             },
           );
         }),

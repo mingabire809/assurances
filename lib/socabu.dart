@@ -1,3 +1,5 @@
+import 'package:assurance/partner.dart';
+
 import 'lib.dart';
 import 'package:assurance/home.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,7 @@ class _SocabuState extends State<Socabu>{
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => MyHomePage()));
+                    context, MaterialPageRoute(builder: (context) => Partner()));
               },
             );
           }),

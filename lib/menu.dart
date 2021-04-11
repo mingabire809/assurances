@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:assurance/about.dart';
 import 'package:assurance/category.dart';
 import 'package:assurance/locator.dart';
 import 'package:assurance/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'map.dart';
 
 class Menu extends StatelessWidget {
@@ -92,12 +95,50 @@ class Menu extends StatelessWidget {
           leading: CircleAvatar(
               child: Icon(Icons.logout,color: Colors.white,), backgroundColor: Colors.black54),
           title: Text("Logout"),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Login()),
-            );
-          },
+          onTap: ()=> showDialog(
+              context: context,
+              builder: (_) {
+                return AlertDialog(
+                  title: Text('Do you want to logout?'),
+                  actions: [
+                    FlatButton(
+                      onPressed: () => Navigator.pop(context, false), // passing false
+                      child: Text('No'),
+                    ),
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Login()));
+                      }, // passing true
+                      child: Text('Yes'),
+                    ),
+                  ],
+                );
+              })
+        ),
+        ListTile(
+          leading: CircleAvatar(
+            child: Icon(Icons.close, color: Colors.white,), backgroundColor: Colors.black54,
+          ),
+            title: Text("Exit"),
+            onTap: () => showDialog(
+                context: context,
+                builder: (_) {
+                  return AlertDialog(
+                    title: Text('Do you want to exit?'),
+                    actions: [
+                      FlatButton(
+                        onPressed: () => Navigator.pop(context, false), // passing false
+                        child: Text('No'),
+                      ),
+                      FlatButton(
+                        onPressed: () => exit(0), // passing true
+                        child: Text('Yes'),
+                      ),
+                    ],
+                  );
+                })
+
         ),
       ],
     );
@@ -106,6 +147,10 @@ class Menu extends StatelessWidget {
         child: drawerItems,
         color: Colors.white,
       ),
+
     );
+
   }
+
 }
+

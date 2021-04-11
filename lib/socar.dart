@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:assurance/home.dart';
+import 'package:assurance/partner.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -26,7 +27,7 @@ class _SocarState extends State<Socar>{
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => MyHomePage()));
+                  context, MaterialPageRoute(builder: (context) => Partner()));
             },
           );
         }),
@@ -220,7 +221,26 @@ class _AboutUsState extends State<AboutUs> {
             ),
             SizedBox(height: 10.0,),
             Text("Nos Reassureurs"),
-            ListTile(
+            Row(
+              children:<Widget> [
+                CircleAvatar(
+                  backgroundImage: AssetImage("images/logoo1.png"),
+                  radius: 50.0,
+                ),
+                SizedBox(width: 50.0,),
+                CircleAvatar(
+                  backgroundImage: AssetImage("images/logoo3.png"),
+                  radius: 50.0,
+                ),
+                SizedBox(width: 20.0,),
+                CircleAvatar(
+                  backgroundImage: AssetImage("images/logoo4.png"),
+                  radius: 50.0,
+                )
+
+              ],
+            ),
+            /*ListTile(
               leading: CircleAvatar(
                 backgroundImage: AssetImage("images/logoo1.png"),
               ),
@@ -233,7 +253,7 @@ class _AboutUsState extends State<AboutUs> {
               leading: CircleAvatar(
                 backgroundImage: AssetImage("images/logoo4.png"),
               ),
-            ),
+            ),*/
 
 
           ],
