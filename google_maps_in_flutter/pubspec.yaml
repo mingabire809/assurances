@@ -21,16 +21,16 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-
-
-  flutter:
+ flutter:
     sdk: flutter
-  google_maps_cluster_manager: ^1.0.0
+
+ google_maps_cluster_manager: ^1.0.0
+
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.0
+ cupertino_icons: ^1.0.0
 
 dev_dependencies:
   flutter_test:

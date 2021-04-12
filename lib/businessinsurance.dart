@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'about.dart';
 
@@ -215,11 +216,24 @@ class _AboutUsState extends State<AboutUs> {
             SizedBox(height: 10.0,),
             ListTile(
                 leading: Icon(Icons.phone),
-                title: Text("+257 2228 0042/49")
+                title: Text("+257 2228 0042"),
+              onTap: ()=> launch("tel:+25722280042"),
+            ),
+            ListTile(
+              leading: Icon(Icons.phone),
+              title: Text("+257 2228 0049"),
+              onTap: ()=> launch("tel:+25722280049"),
             ),
             ListTile(
                 leading: Icon(Icons.mail),
-                title: Text("info@bic.bi")
+                title: Text("info@bic.bi"),
+              //onTap: () => _launchURL('xxx@gmail.com', 'Flutter Email Test', 'Hello Flutter'), child: new Text('Send mail'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  _launchURL('info@bic.bic', 'Flutter Email Test', 'Hello Flutter'),
+                );
+              },
             ),
 
 
@@ -229,5 +243,13 @@ class _AboutUsState extends State<AboutUs> {
         ),
       ),
     );
+  }
+  _launchURL(String toMailId, String subject, String body) async {
+    var url = 'mailto:$toMailId?subject=$subject&body=$body';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

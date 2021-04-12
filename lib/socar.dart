@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'about.dart';
 
@@ -204,14 +205,28 @@ class _AboutUsState extends State<AboutUs> {
             Image.asset('images/evolution.png'),
             ListTile(
                 leading: Icon(Icons.phone),
-                title: Text("+257) 69 900 400"
-                  "(+257) 75 103 000"
-                    "(+257) 22 27 98 88"
-                "(+257) 76 999 950")
+                title: Text("+257) 69 900 400"),
+              onTap: ()=> launch("tel: +25769900400"),
+            ),
+            ListTile(
+              leading: Icon(Icons.phone),
+              title: Text("(+257) 75 103 000"),
+              onTap: ()=> launch("tel: +25775103000"),
+            ),
+            ListTile(
+              leading: Icon(Icons.phone),
+              title: Text("(+257) 22 27 98 88"),
+              onTap: ()=> launch("tel:+25722279888"),
+            ),
+            ListTile(
+              leading: Icon(Icons.phone),
+              title: Text("(+257) 76 999 950"),
+              onTap: ()=> launch("tel:+25776999950"),
             ),
             ListTile(
                 leading: Icon(Icons.mail),
-                title: Text("info@socarvie.bi")
+                title: Text("info@socarvie.bi"),
+              onTap: () => _launchURL('info@socarvie.bi', 'Flutter Email Test', 'Hello Flutter'),
             ),
             ListTile(
                 leading: Icon(Icons.place),
@@ -240,25 +255,18 @@ class _AboutUsState extends State<AboutUs> {
 
               ],
             ),
-            /*ListTile(
-              leading: CircleAvatar(
-                backgroundImage: AssetImage("images/logoo1.png"),
-              ),
-            ),
-            ListTile(
-              leading: CircleAvatar(
-                backgroundImage: AssetImage("images/logoo3.png"),
-              ),
-            ),ListTile(
-              leading: CircleAvatar(
-                backgroundImage: AssetImage("images/logoo4.png"),
-              ),
-            ),*/
-
 
           ],
         ),
       ),
     );
+  }
+  _launchURL(String toMailId, String subject, String body) async {
+    var url = 'mailto:$toMailId?subject=$subject&body=$body';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

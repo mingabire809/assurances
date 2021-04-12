@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'about.dart';
 
@@ -38,6 +39,7 @@ class _AscomaState extends State<Ascoma>{
           children:<Widget> [
             Image.asset('images/ascoma.png'),
             SizedBox(height: 20.0,),
+
             /*ListTile(
               leading: CircleAvatar(
                 backgroundImage: AssetImage("images/cover.jpg"),
@@ -192,7 +194,12 @@ class _AboutUsState extends State<AboutUs>{
                 "to become the leader in insurance brokerage in Monaco and French-speaking Africa. "
                 "Today, the group consists of nearly 700 employees in 24 countries.",
               style: TextStyle(fontSize: 15.0),),
-
+            SizedBox(height: 10.0),
+            ListTile(
+                leading: Icon(Icons.web),
+                title: Text("https://www.ascoma.com/en/ascoma/news-176.html?no_cache=1"),
+                onTap: ()=> launch("https://www.ascoma.com/en/ascoma/news-176.html?no_cache=1")
+            ),
 
 
 

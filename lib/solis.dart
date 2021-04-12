@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'about.dart';
 
@@ -192,11 +193,13 @@ class _AboutUsState extends State<AboutUs> {
             SizedBox(height:10.0),
             ListTile(
                 leading: Icon(Icons.phone),
-                title: Text("+257 22 27 68 13")
+                title: Text("+257 22 27 68 13"),
+                onTap: ()=> launch("tel:+25722276813"),
             ),
             ListTile(
                 leading: Icon(Icons.web),
-                title: Text("http://www.solis.bi/")
+                title: Text("http://www.solis.bi/"),
+                onTap: ()=> launch("http://www.solis.bi/")
             ),
 
 

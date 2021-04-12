@@ -1,4 +1,5 @@
 import 'package:assurance/partner.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'lib.dart';
 import 'package:assurance/home.dart';
@@ -204,6 +205,12 @@ class _AboutUsState extends State<AboutUs>{
 
                "From 1985, SOCABU was entirely directed and managed by nationals who took over from expatriates.",
              style: TextStyle(fontSize: 15.0),),
+           SizedBox(height: 10.0),
+           ListTile(
+               leading: Icon(Icons.web),
+               title: Text("https://socabu-assurances.com/"),
+               onTap: ()=> launch("https://socabu-assurances.com/")
+           ),
 
 
 

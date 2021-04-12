@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'about.dart';
 
@@ -227,15 +228,23 @@ class _AboutUsState extends State<AboutUs> {
             SizedBox(height: 10.0,),
             ListTile(
                 leading: Icon(Icons.phone),
-                title: Text("+257 22 22 30 67")
+                title: Text("+257 22 22 30 67"),
+                onTap: () =>launch("tel:+25722223067"),
             ),
             ListTile(
                 leading: Icon(Icons.mail),
-                title: Text("pharma.mfp@gmail.com")
+                title: Text("pharma.mfp@gmail.com"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  _launchURL('pharma.mfp@gmail.com', 'Flutter Email Test', 'Hello Flutter'),
+                );
+              },
             ),
             ListTile(
                 leading: Icon(Icons.web),
-                title: Text("http://mfp-burundi.org/")
+                title: Text("http://mfp-burundi.org/"),
+                onTap: () =>launch("http://mfp-burundi.org/"),
             ),
 
 
@@ -246,5 +255,13 @@ class _AboutUsState extends State<AboutUs> {
         ),
       ),
     );
+  }
+  _launchURL(String toMailId, String subject, String body) async {
+    var url = 'mailto:$toMailId?subject=$subject&body=$body';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
