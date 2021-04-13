@@ -4,22 +4,102 @@ import 'package:assurance/about.dart';
 import 'package:assurance/category.dart';
 import 'package:assurance/locator.dart';
 import 'package:assurance/login.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'map.dart';
 
-class Menu extends StatelessWidget {
-  const Menu({Key key}) : super(key: key);
+class Menu extends StatefulWidget {
+  @override
+  _MenuState createState() => _MenuState();
+}
+
+class _MenuState extends State<Menu> {
+  File _image;
+  _imgFromCamera() async {
+    File image = await ImagePicker.pickImage(
+        source: ImageSource.camera, imageQuality: 50
+    );
+
+    setState(() {
+      _image = image;
+    });
+  }
+
+  _imgFromGallery() async {
+    File image = await  ImagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: 50
+    );
+
+    setState(() {
+      _image = image;
+    });
+  }
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Gallery'),
+                      onTap: () {
+                        _imgFromGallery();
+                        Navigator.of(context).pop();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Camera'),
+                    onTap: () {
+                      _imgFromCamera();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    const drawerHeader = UserAccountsDrawerHeader(
+    var drawerHeader = UserAccountsDrawerHeader(
       accountName: Text("Full Name"),
       accountEmail: Text("user.name@email.com"),
       decoration: BoxDecoration(color: Colors.black38),
       currentAccountPicture: CircleAvatar(
-        backgroundImage: AssetImage("images/profile.jpg"),
+        radius: 55,
+        backgroundColor: Color(0xffFDCF09),
+        child: _image != null
+            ? ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: Image.file(
+            _image,
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,
+          ),
+        )
+            : Container(
+          decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(50)),
+          width: 100,
+          height: 100,
+          child: Icon(
+            Icons.camera_alt,
+            color: Colors.grey[800],
+          ),
+        ),
+
       ),
+
     );
 
     final drawerItems = ListView(
@@ -45,8 +125,11 @@ class Menu extends StatelessWidget {
         ),
         ListTile(
           leading: CircleAvatar(
-              child: Icon(Icons.person,color: Colors.white,), backgroundColor: Colors.black54),
+              child: Icon(Icons.person,color: Colors.white,), backgroundColor: Colors.black54,),
           title: Text("Profile"),
+            onTap: () {
+              _showPicker(context);
+            },
         ),
         ListTile(
           leading: CircleAvatar(
@@ -54,6 +137,7 @@ class Menu extends StatelessWidget {
             backgroundColor: Colors.black54,
           ),
           title: Text("Update"),
+
         ),
         ListTile(
           leading: CircleAvatar(
