@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:assurance/about.dart';
+import 'package:assurance/camera.dart';
 import 'package:assurance/category.dart';
+
 import 'package:assurance/locator.dart';
 import 'package:assurance/login.dart';
 
@@ -110,6 +112,7 @@ class _MenuState extends State<Menu> {
           leading: CircleAvatar(
               child: Icon(Icons.home,color: Colors.white,), backgroundColor: Colors.black54),
           title: Text("Home"),
+
         ),
         ListTile(
           leading: CircleAvatar(
@@ -137,6 +140,12 @@ class _MenuState extends State<Menu> {
             backgroundColor: Colors.black54,
           ),
           title: Text("Update"),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Camerawesome()),
+            );
+          },
 
         ),
         ListTile(

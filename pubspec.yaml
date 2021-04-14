@@ -33,6 +33,8 @@ dependencies:
   geolocator: ^6.1.1
   sms: ^0.2.0
   mailer: ^2.0.2
+  dio: 1.0.0
+  navigation_history_observer: ^1.0.3+1
 
 
 
@@ -43,6 +45,11 @@ dependencies:
   cupertino_icons: ^1.0.0
 
   image_picker: ^0.6.6+5
+  camera:
+  path_provider:
+  path:
+  esys_flutter_share: ^1.0.2
+  camerawesome: ^0.2.2
 
 dev_dependencies:
   flutter_test:

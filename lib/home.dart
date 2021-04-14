@@ -1,18 +1,9 @@
-import 'package:assurance/ascoma.dart';
-import 'package:assurance/bicor.dart';
-import 'package:assurance/businessinsurance.dart';
-import 'package:assurance/egiv.dart';
-import 'package:assurance/mfp.dart';
 import 'package:assurance/partner.dart';
-import 'package:assurance/socabu.dart';
-import 'package:assurance/socar.dart';
-import 'package:assurance/solis.dart';
-import 'package:assurance/ucar.dart';
+import 'package:assurance/search.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'jubilee.dart';
 import 'menu.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -25,7 +16,32 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final TextEditingController _filter = new TextEditingController();
+  final dio = new Dio();
+  String _searchText = "";
+  List names = new List();
+  List filteredNames = new List();
+  Icon _searchIcon = new Icon(Icons.search);
+  Widget _appBarTitle = new Text( 'Assurance' );
+ /* _ExamplePageState() {
+    _filter.addListener(() {
+      if (_filter.text.isEmpty) {
+        setState(() {
+          _searchText = "";
+          filteredNames = names;
+        });
+      } else {
+        setState(() {
+          _searchText = _filter.text;
+        });
+      }
+    });
+  }*/
   @override
+ /* void initState() {
+    this._getNames();
+    super.initState();
+  }*/
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -44,16 +60,20 @@ class _MyHomePageState extends State<MyHomePage> {
             tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
           );
         }),
-        title: Text(
+        title: _appBarTitle,
+        /*title: Text(
           "Assurance",
           style: TextStyle(color: Colors.black),
-        ),
+        ),*/
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.search),
+              icon: _searchIcon,
               color: Colors.black,
               iconSize: 28.0,
-              onPressed: null),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SearchList()));
+            },),
         ],
       ),
 
@@ -64,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
             fit: BoxFit.cover,
           ),
         ),
+
         child: ListView(
           children: <Widget>[
             SizedBox(height: 10.0),
@@ -83,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(height: 15.0),
             Row(
               children: <Widget>[
+
                 InkWell(
                   child: Card(
                     child: Column(
@@ -251,10 +273,64 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+
       // This trailing comma makes auto-formatting nicer for build methods.
       drawer: Menu(),
     );
   }
+  /*Widget _buildList() {
+    if (!(_searchText.isEmpty)) {
+      List tempList = new List();
+      for (int i = 0; i < filteredNames.length; i++) {
+        if (filteredNames[i]['name'].toLowerCase().contains(_searchText.toLowerCase())) {
+          tempList.add(filteredNames[i]);
+        }
+      }
+      filteredNames = tempList;
+    }
+    return ListView.builder(
+      itemCount: names == null ? 0 : filteredNames.length,
+      itemBuilder: (BuildContext context, int index) {
+        return new ListTile(
+          title: Text(filteredNames[index]['name']),
+          onTap: () => print(filteredNames[index]['name']),
+        );
+      },
+    );
+  }*/
+
+  void _searchPressed() {
+    setState(() {
+      if (this._searchIcon.icon == Icons.search) {
+        this._searchIcon = new Icon(Icons.close);
+        this._appBarTitle = new TextField(
+          controller: _filter,
+          decoration: new InputDecoration(
+              prefixIcon: new Icon(Icons.search),
+              hintText: 'Search...'
+          ),
+        );
+      } else {
+        this._searchIcon = new Icon(Icons.search);
+        this._appBarTitle = new Text( 'Assurance' );
+        filteredNames = names;
+        _filter.clear();
+      }
+    });
+  }
+
+  /*void _getNames() async {
+    final response = await dio.get('https://swapi.co/api/people');
+    List tempList = new List();
+    for (int i = 0; i < response.data['results'].length; i++) {
+      tempList.add(response.data['results'][i]);
+    }
+    setState(() {
+      names = tempList;
+      names.shuffle();
+      filteredNames = names;
+    });
+  }*/
 }
 
 _launchURL() async {
@@ -345,3 +421,97 @@ _Topic() async {
     throw 'Could not launch $url';
   }
 }
+
+/*class SearchBar extends StatefulWidget{
+  @override
+  _SearchBarState createState() => _SearchBarState();
+
+}
+
+class _SearchBarState extends State<SearchBar>{
+  TextEditingController _searchQueryController = TextEditingController();
+  bool _isSearching = false;
+  String searchQuery = "Search query";
+
+  @override
+  Widget build(BuildContext context) {
+return Scaffold(
+  appBar: AppBar(
+    leading: _isSearching ? const BackButton() : Container(),
+    title: _isSearching ? _buildSearchField() : _buildTitle(context),
+    actions: _buildActions(),
+  ),
+
+);
+
+  }
+  Widget _buildSearchField() {
+    return TextField(
+      controller: _searchQueryController,
+      autofocus: true,
+      decoration: InputDecoration(
+        hintText: "Search Data...",
+        border: InputBorder.none,
+        hintStyle: TextStyle(color: Colors.white30),
+      ),
+      style: TextStyle(color: Colors.white, fontSize: 16.0),
+      onChanged: (query) => updateSearchQuery(query),
+    );
+  }
+
+  List<Widget> _buildActions() {
+    if (_isSearching) {
+      return <Widget>[
+        IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            if (_searchQueryController == null ||
+                _searchQueryController.text.isEmpty) {
+              Navigator.pop(context);
+              return;
+            }
+            _clearSearchQuery();
+          },
+        ),
+      ];
+    }
+
+    return <Widget>[
+      IconButton(
+        icon: const Icon(Icons.search),
+        onPressed: _startSearch,
+      ),
+    ];
+  }
+
+  void _startSearch() {
+    ModalRoute.of(context)
+        .addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
+
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void updateSearchQuery(String newQuery) {
+    setState(() {
+      searchQuery = newQuery;
+    });
+  }
+
+  void _stopSearching() {
+    _clearSearchQuery();
+
+    setState(() {
+      _isSearching = false;
+    });
+  }
+
+  void _clearSearchQuery() {
+    setState(() {
+      _searchQueryController.clear();
+      updateSearchQuery("");
+    });
+  }
+}*/
+
