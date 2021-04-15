@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 import 'home.dart';
 
 class Condition extends StatefulWidget{
@@ -8,6 +8,11 @@ class Condition extends StatefulWidget{
 }
 class _ConditionState extends State<Condition>{
   bool checkedValue = false;
+  DateTime selectData;
+  String initValue = "Select your Debut Date";
+  bool isDateSelected = false;
+  DateTime coverStarting; // instance of DateTime
+  String birthDateInString;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,6 +22,29 @@ class _ConditionState extends State<Condition>{
       body: Container(
         child: ListView(
           children:<Widget> [
+            GestureDetector(
+                child: new Icon(Icons.calendar_today),
+                onTap: () async {
+                  final datePick = await showDatePicker(
+                      context: context,
+                      initialDate: new DateTime.now(),
+                      firstDate: new DateTime(1900),
+                      lastDate: new DateTime(2100));
+                  if (datePick != null && datePick != coverStarting) {
+                    setState(() {
+                      coverStarting = datePick;
+                      isDateSelected = true;
+
+                      // put it here
+                      birthDateInString =
+                      "${coverStarting.month}/${coverStarting.day}/${coverStarting.year}";
+                    });
+                  }
+                }),
+            Text(isDateSelected
+                ? DateFormat.yMMMd().format(coverStarting)
+                : initValue),
+            SizedBox(height: 10.0),
             Image.asset('images/condition.jpg'),
             SizedBox(height: 10.0,),
             CheckboxListTile(

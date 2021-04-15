@@ -156,7 +156,7 @@ class _RegistrationState extends State<Registration> {
 
                       // put it here
                       birthDateInString =
-                          "${birthDate.month}/${birthDate.day}/${birthDate.year}";
+                      "${birthDate.month}/${birthDate.day}/${birthDate.year}";
                     });
                   }
                 }),
@@ -170,14 +170,14 @@ class _RegistrationState extends State<Registration> {
               hint: _dropDownValue == null
                   ? Text('Select your Gender')
                   : Text(
-                      _dropDownValue,
-                      style: TextStyle(color: Colors.black),
-                    ),
+                _dropDownValue,
+                style: TextStyle(color: Colors.black),
+              ),
               isExpanded: true,
               iconSize: 30.0,
               style: TextStyle(color: Colors.black),
               items: ['Male', 'Female'].map(
-                (val) {
+                    (val) {
                   return DropdownMenuItem<String>(
                     value: val,
                     child: Text(val),
@@ -186,7 +186,7 @@ class _RegistrationState extends State<Registration> {
               ).toList(),
               onChanged: (val) {
                 setState(
-                  () {
+                      () {
                     _dropDownValue = val;
                   },
                 );
@@ -253,9 +253,9 @@ class _RegistrationState extends State<Registration> {
                   onPressed: () {
                     if (_passwordController.text != _repasswordController.text)
                       _showMyDialog();
-                      else
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MyHomePage()));
+                    else
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MyHomePage()));
                   },
                 )
               ],

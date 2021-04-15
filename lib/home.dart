@@ -1,8 +1,10 @@
+import 'package:assurance/login.dart';
 import 'package:assurance/partner.dart';
 import 'package:assurance/search.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'menu.dart';
 
@@ -23,6 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List filteredNames = new List();
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( 'Assurance' );
+
  /* _ExamplePageState() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
@@ -43,240 +46,245 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
   }*/
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: Builder(builder: (BuildContext context) {
-          return IconButton(
-            icon: const Icon(
-              Icons.menu,
-              color: Colors.black,
-              size: 20.0,
-              semanticLabel: 'Menu',
-            ),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          );
-        }),
-        title: _appBarTitle,
-        /*title: Text(
+
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: Builder(builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(
+                Icons.menu,
+                color: Colors.black,
+                size: 20.0,
+                semanticLabel: 'Menu',
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              tooltip: MaterialLocalizations
+                  .of(context)
+                  .openAppDrawerTooltip,
+            );
+          }),
+          title: _appBarTitle,
+          /*title: Text(
           "Assurance",
           style: TextStyle(color: Colors.black),
         ),*/
-        actions: <Widget>[
-          IconButton(
+          actions: <Widget>[
+            IconButton(
               icon: _searchIcon,
               color: Colors.black,
               iconSize: 28.0,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => SearchList()));
-            },),
-        ],
-      ),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SearchList()));
+              },),
+          ],
+        ),
 
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("images/path.jpg"),
-            fit: BoxFit.cover,
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("images/path.jpg"),
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          child: ListView(
+            children: <Widget>[
+              SizedBox(height: 10.0),
+              RichText(
+                  text: TextSpan(children: <TextSpan>[
+                    TextSpan(
+                        text: "Our Partner",
+                        style: TextStyle(color: Colors.white, fontSize: 20.0),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Partner()),
+                            );
+                          })
+                  ])),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+
+                  InkWell(
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          Image.asset("images/it.jpg",
+                              fit: BoxFit.cover, width: 190, height: 190),
+                          Text(
+                            "Insurances for IT Companies",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(context, _launchURL());
+                    },
+                  ),
+                  InkWell(
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          Image.asset("images/whyassurance.jpg",
+                              fit: BoxFit.cover, width: 190, height: 190),
+                          Text(
+                            "What Is Insurance",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(context, _Insurance());
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  InkWell(
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          Image.asset("images/underwritting.jpg",
+                              fit: BoxFit.cover, width: 190, height: 190),
+                          Text(
+                            "Underwritting Benefits",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(context, _Underwritting());
+                    },
+                  ),
+                  InkWell(
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          Image.asset("images/work.jpg",
+                              fit: BoxFit.cover, width: 190, height: 190),
+                          Text(
+                            "How insurance works",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(context, _Work());
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  InkWell(
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          Image.asset("images/type.jpg",
+                              fit: BoxFit.cover, width: 190, height: 190),
+                          Text(
+                            "4 Necessaries Insurance ",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(context, _TypeOfInsurance());
+                    },
+                  ),
+                  InkWell(
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          Image.asset("images/retirement.jpg",
+                              fit: BoxFit.cover, width: 190, height: 190),
+                          Text(
+                            "Insurance for Retirement",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(context, _Retirement());
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.0),
+              Row(
+                children: <Widget>[
+                  InkWell(
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          Image.asset("images/top.jpg",
+                              fit: BoxFit.cover, width: 190, height: 190),
+                          Text(
+                            "Top 10 Insurers",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(context, _Top());
+                    },
+                  ),
+                  InkWell(
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          Image.asset("images/digitalization.jpg",
+                              fit: BoxFit.cover, width: 190, height: 190),
+                          Text(
+                            "Insurance Digitalization",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.push(context, _Digitalization());
+                    },
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.0),
+              RichText(
+                  text: TextSpan(children: <TextSpan>[
+                    TextSpan(
+                        text: "Others interesting topics on Insurance",
+                        style: TextStyle(color: Colors.white, fontSize: 15.0),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.push(context, _Topic());
+                          })
+                  ])),
+              SizedBox(height: 10.0)
+            ],
           ),
         ),
 
-        child: ListView(
-          children: <Widget>[
-            SizedBox(height: 10.0),
-            RichText(
-                text: TextSpan(children: <TextSpan>[
-                  TextSpan(
-                      text: "Our Partner",
-                      style: TextStyle(color: Colors.white, fontSize: 20.0),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Partner()),
-                          );
-                        })
-                ])),
-            SizedBox(height: 15.0),
-            Row(
-              children: <Widget>[
+        // This trailing comma makes auto-formatting nicer for build methods.
+        drawer: Menu(),
+      );
 
-                InkWell(
-                  child: Card(
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset("images/it.jpg",
-                            fit: BoxFit.cover, width: 190, height: 190),
-                        Text(
-                          "Insurances for IT Companies",
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(context, _launchURL());
-                  },
-                ),
-                InkWell(
-                  child: Card(
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset("images/whyassurance.jpg",
-                            fit: BoxFit.cover, width: 190, height: 190),
-                        Text(
-                          "What Is Insurance",
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(context, _Insurance());
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 15.0),
-            Row(
-              children: <Widget>[
-                InkWell(
-                  child: Card(
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset("images/underwritting.jpg",
-                            fit: BoxFit.cover, width: 190, height: 190),
-                        Text(
-                          "Underwritting Benefits",
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(context, _Underwritting());
-                  },
-                ),
-                InkWell(
-                  child: Card(
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset("images/work.jpg",
-                            fit: BoxFit.cover, width: 190, height: 190),
-                        Text(
-                          "How insurance works",
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(context, _Work());
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 15.0),
-            Row(
-              children: <Widget>[
-                InkWell(
-                  child: Card(
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset("images/type.jpg",
-                            fit: BoxFit.cover, width: 190, height: 190),
-                        Text(
-                          "4 Necessaries Insurance ",
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(context, _TypeOfInsurance());
-                  },
-                ),
-                InkWell(
-                  child: Card(
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset("images/retirement.jpg",
-                            fit: BoxFit.cover, width: 190, height: 190),
-                        Text(
-                          "Insurance for Retirement",
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(context, _Retirement());
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 15.0),
-            Row(
-              children: <Widget>[
-                InkWell(
-                  child: Card(
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset("images/top.jpg",
-                            fit: BoxFit.cover, width: 190, height: 190),
-                        Text(
-                          "Top 10 Insurers",
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(context, _Top());
-                  },
-                ),
-                InkWell(
-                  child: Card(
-                    child: Column(
-                      children: <Widget>[
-                        Image.asset("images/digitalization.jpg",
-                            fit: BoxFit.cover, width: 190, height: 190),
-                        Text(
-                          "Insurance Digitalization",
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(context, _Digitalization());
-                  },
-                ),
-              ],
-            ),
-            SizedBox(height: 20.0),
-            RichText(
-                text: TextSpan(children: <TextSpan>[
-              TextSpan(
-                  text: "Others interesting topics on Insurance",
-                  style: TextStyle(color: Colors.white, fontSize: 15.0),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      Navigator.push(context, _Topic());
-                    })
-            ])),
-            SizedBox(height: 10.0)
-          ],
-        ),
-      ),
-
-      // This trailing comma makes auto-formatting nicer for build methods.
-      drawer: Menu(),
-    );
   }
   /*Widget _buildList() {
     if (!(_searchText.isEmpty)) {

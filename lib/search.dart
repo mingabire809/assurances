@@ -43,16 +43,9 @@ class _SearchListState extends State<SearchList>
   }
 
   void init() {
+
+    TextSpan(text: "ADG");
     _list = List();
-    InkWell(
-      child: ListView(
-        children:<Widget> [
-
-        ],
-      ),
-    );
-
-
     _list.add("Category");
     _list.add("Partners");
     _list.add("Cover");
@@ -72,6 +65,11 @@ class _SearchListState extends State<SearchList>
       body: new ListView(
         padding: new EdgeInsets.symmetric(vertical: 8.0),
         children: _IsSearching ? _buildSearchList() : _buildList(),
+        /*children:<Widget> [
+      ListTile(
+      title: Text("ADG"),
+    ),
+        ],*/
       ),
     );
   }

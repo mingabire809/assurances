@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'registration.dart';
@@ -114,11 +116,11 @@ class _LoginState extends State<Login> {
                     onPressed: () {
                       if (_usernameController.text != "Assurance" &&  _passwordController.text != "password")
 
-                      _showMyDialog();
+                        _showMyDialog();
 
                       else
-                      Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => MyHomePage()));
+                        Navigator.push(
+                            context, MaterialPageRoute(builder: (context) => MyHomePage()));
 
 
                     },)
@@ -144,7 +146,7 @@ class _LoginState extends State<Login> {
                 Icon(Icons.error),
 
                 Text('Authentication error!!',
-                textAlign: TextAlign.center)
+                    textAlign: TextAlign.center)
 
               ],
 
