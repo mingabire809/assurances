@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'home.dart';
 import 'login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Registration extends StatefulWidget {
   @override
@@ -23,6 +24,7 @@ class _RegistrationState extends State<Registration> {
   final _passwordController = TextEditingController();
   final _repasswordController = TextEditingController();
   String _dropDownValue;
+  final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +158,7 @@ class _RegistrationState extends State<Registration> {
 
                       // put it here
                       birthDateInString =
-                      "${birthDate.month}/${birthDate.day}/${birthDate.year}";
+                          "${birthDate.month}/${birthDate.day}/${birthDate.year}";
                     });
                   }
                 }),
@@ -170,14 +172,14 @@ class _RegistrationState extends State<Registration> {
               hint: _dropDownValue == null
                   ? Text('Select your Gender')
                   : Text(
-                _dropDownValue,
-                style: TextStyle(color: Colors.black),
-              ),
+                      _dropDownValue,
+                      style: TextStyle(color: Colors.black),
+                    ),
               isExpanded: true,
               iconSize: 30.0,
               style: TextStyle(color: Colors.black),
               items: ['Male', 'Female'].map(
-                    (val) {
+                (val) {
                   return DropdownMenuItem<String>(
                     value: val,
                     child: Text(val),
@@ -186,7 +188,7 @@ class _RegistrationState extends State<Registration> {
               ).toList(),
               onChanged: (val) {
                 setState(
-                      () {
+                  () {
                     _dropDownValue = val;
                   },
                 );
@@ -245,19 +247,29 @@ class _RegistrationState extends State<Registration> {
                   },
                 ),
                 RaisedButton(
-                  child: Text("Register"),
-                  color: Colors.lightBlueAccent,
-                  shape: BeveledRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
-                  onPressed: () {
+                    child: Text("Register"),
+                    color: Colors.lightBlueAccent,
+                    shape: BeveledRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                    onPressed: () {
+                      auth
+                          .createUserWithEmailAndPassword(
+                              email: _emailController.text,
+                              password: _passwordController.text)
+                          .then((_) {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => MyHomePage()));
+                      });
+                    }
+                    /*onPressed: () {
                     if (_passwordController.text != _repasswordController.text)
                       _showMyDialog();
                     else
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => MyHomePage()));
-                  },
-                )
+                  },*/
+                    )
               ],
             ),
           ],
@@ -265,6 +277,7 @@ class _RegistrationState extends State<Registration> {
       ),
     );
   }
+
   Future<void> _showMyDialog() async {
     return showDialog<void>(
       context: context,
@@ -274,17 +287,11 @@ class _RegistrationState extends State<Registration> {
           title: Text('Error'),
           content: SingleChildScrollView(
             child: ListBody(
-
               children: <Widget>[
                 Icon(Icons.error),
-
-                Text('Passwords do not match!!',
-                    textAlign: TextAlign.center)
-
+                Text('Passwords do not match!!', textAlign: TextAlign.center)
               ],
-
             ),
-
           ),
           actions: <Widget>[
             TextButton(

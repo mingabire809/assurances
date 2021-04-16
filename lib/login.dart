@@ -1,16 +1,20 @@
 
 
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'registration.dart';
 import 'home.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 class Login extends StatefulWidget {
+
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
+  final auth = FirebaseAuth.instance;
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   String error ;
@@ -35,6 +39,32 @@ class _LoginState extends State<Login> {
               );
             }
         ),
+        title: Text("Authentification Page"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            color: Colors.black,
+            iconSize: 28.0,
+            onPressed: () => showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text('Do you want to exit?'),
+            actions: [
+              FlatButton(
+                onPressed: () => Navigator.pop(context, false),
+                // passing false
+                child: Text('No'),
+              ),
+              FlatButton(
+                onPressed: () => exit(0), // passing true
+                child: Text('Yes'),
+              ),
+            ],
+          );
+        })
+          ),
+        ],
       ),
       body: Container(
           decoration: BoxDecoration(
@@ -63,7 +93,7 @@ class _LoginState extends State<Login> {
                 height: 120.0,
               ),
               TextField(
-                controller: _usernameController,
+                //controller: _usernameController,
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   focusColor: Colors.white,
@@ -76,12 +106,16 @@ class _LoginState extends State<Login> {
                 style: TextStyle(
                   color: Colors.white,
                 ),
-
+                onChanged: (value) {
+                  setState(() {
+                    _usernameController.text = value.trim();
+                  });
+                },
 
               ),
 
               TextField(
-                controller: _passwordController,
+              //  controller: _passwordController,
                 decoration: InputDecoration(
                     fillColor: Colors.white,
                     labelText: "Password",
@@ -93,6 +127,11 @@ class _LoginState extends State<Login> {
                 style: TextStyle(
                   color: Colors.white,
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    _passwordController.text = value.trim();
+                  });
+                },
               ),
               ButtonBar(
                 children: <Widget>[
@@ -113,7 +152,14 @@ class _LoginState extends State<Login> {
                     shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     ),
-                    onPressed: () {
+                      onPressed: (){
+                      /*  auth.signInWithEmailAndPassword(email: _usernameController.text, password: _passwordController.text).then((_){
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage()));
+                        });*/
+                        _signInWithEmailAndPassword();
+                      }
+
+                    /*onPressed: () {
                       if (_usernameController.text != "Assurance" &&  _passwordController.text != "password")
 
                         _showMyDialog();
@@ -123,7 +169,8 @@ class _LoginState extends State<Login> {
                             context, MaterialPageRoute(builder: (context) => MyHomePage()));
 
 
-                    },)
+                    },*/
+                  )
 
                 ],
               ),
@@ -132,6 +179,15 @@ class _LoginState extends State<Login> {
     );
 
   }
+  Future<void> _signInWithEmailAndPassword() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: _usernameController.text, password: _passwordController.text).then((_){
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage()));
+      });
+      } catch (e) {
+        _showMyDialog(); // TODO: show dialog with error
+      }
+    }
   Future<void> _showMyDialog() async {
     return showDialog<void>(
       context: context,

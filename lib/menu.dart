@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:assurance/about.dart';
 import 'package:assurance/camera.dart';
 import 'package:assurance/category.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:assurance/locator.dart';
 import 'package:assurance/login.dart';
 
@@ -18,11 +18,12 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
+  final auth = FirebaseAuth.instance;
   File _image;
+
   _imgFromCamera() async {
     File image = await ImagePicker.pickImage(
-        source: ImageSource.camera, imageQuality: 50
-    );
+        source: ImageSource.camera, imageQuality: 50);
 
     setState(() {
       _image = image;
@@ -30,14 +31,14 @@ class _MenuState extends State<Menu> {
   }
 
   _imgFromGallery() async {
-    File image = await  ImagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 50
-    );
+    File image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, imageQuality: 50);
 
     setState(() {
       _image = image;
     });
   }
+
   void _showPicker(context) {
     showModalBottomSheet(
         context: context,
@@ -65,8 +66,7 @@ class _MenuState extends State<Menu> {
               ),
             ),
           );
-        }
-    );
+        });
   }
 
   @override
@@ -81,39 +81,42 @@ class _MenuState extends State<Menu> {
         backgroundColor: Color(0xffFDCF09),
         child: _image != null
             ? ClipRRect(
-          borderRadius: BorderRadius.circular(50),
-          child: Image.file(
-            _image,
-            width: 100,
-            height: 100,
-            fit: BoxFit.cover,
-          ),
-        )
+                borderRadius: BorderRadius.circular(50),
+                child: Image.file(
+                  _image,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              )
             : Container(
-          decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(50)),
-          width: 100,
-          height: 100,
-          child: Icon(
-            Icons.camera_alt,
-            color: Colors.grey[800],
-          ),
-        ),
-
+                decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(50)),
+                width: 100,
+                height: 100,
+                child: Icon(
+                  Icons.camera_alt,
+                  color: Colors.grey[800],
+                ),
+              ),
       ),
-
     );
 
     final drawerItems = ListView(
       children: <Widget>[
         drawerHeader,
-      SizedBox(height: 20.0,),
+        SizedBox(
+          height: 20.0,
+        ),
         ListTile(
           leading: CircleAvatar(
-              child: Icon(Icons.home,color: Colors.white,), backgroundColor: Colors.black54),
+              child: Icon(
+                Icons.home,
+                color: Colors.white,
+              ),
+              backgroundColor: Colors.black54),
           title: Text("Home"),
-
         ),
         ListTile(
           leading: CircleAvatar(
@@ -129,15 +132,23 @@ class _MenuState extends State<Menu> {
         ),
         ListTile(
           leading: CircleAvatar(
-              child: Icon(Icons.person,color: Colors.white,), backgroundColor: Colors.black54,),
+            child: Icon(
+              Icons.person,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.black54,
+          ),
           title: Text("Profile"),
-            onTap: () {
-              _showPicker(context);
-            },
+          onTap: () {
+            _showPicker(context);
+          },
         ),
         ListTile(
           leading: CircleAvatar(
-            child: Icon(Icons.update,color: Colors.white,),
+            child: Icon(
+              Icons.update,
+              color: Colors.white,
+            ),
             backgroundColor: Colors.black54,
           ),
           title: Text("Update"),
@@ -147,11 +158,13 @@ class _MenuState extends State<Menu> {
               MaterialPageRoute(builder: (context) => Camerawesome()),
             );
           },
-
         ),
         ListTile(
           leading: CircleAvatar(
-              child: Icon(Icons.question_answer_rounded,color: Colors.white,),
+              child: Icon(
+                Icons.question_answer_rounded,
+                color: Colors.white,
+              ),
               backgroundColor: Colors.black54),
           title: Text("About us"),
           onTap: () {
@@ -163,7 +176,10 @@ class _MenuState extends State<Menu> {
         ),
         ListTile(
           leading: CircleAvatar(
-              child: Icon(Icons.map,color: Colors.white,),
+              child: Icon(
+                Icons.map,
+                color: Colors.white,
+              ),
               backgroundColor: Colors.black54),
           title: Text("Map"),
           onTap: () {
@@ -175,7 +191,10 @@ class _MenuState extends State<Menu> {
         ),
         ListTile(
           leading: CircleAvatar(
-              child: Icon(Icons.map,color: Colors.white,),
+              child: Icon(
+                Icons.map,
+                color: Colors.white,
+              ),
               backgroundColor: Colors.black54),
           title: Text("My position"),
           onTap: () {
@@ -186,35 +205,49 @@ class _MenuState extends State<Menu> {
           },
         ),
         ListTile(
-          leading: CircleAvatar(
-              child: Icon(Icons.logout,color: Colors.white,), backgroundColor: Colors.black54),
-          title: Text("Logout"),
-          onTap: ()=> showDialog(
-              context: context,
-              builder: (_) {
-                return AlertDialog(
-                  title: Text('Do you want to logout?'),
-                  actions: [
-                    FlatButton(
-                      onPressed: () => Navigator.pop(context, false), // passing false
-                      child: Text('No'),
-                    ),
-                    FlatButton(
-                      onPressed: () {
+            leading: CircleAvatar(
+                child: Icon(
+                  Icons.logout,
+                  color: Colors.white,
+                ),
+                backgroundColor: Colors.black54),
+            title: Text("Logout"),
+            onTap: () => showDialog(
+                context: context,
+                builder: (_) {
+                  return AlertDialog(
+                    title: Text('Do you want to logout?'),
+                    actions: [
+                      FlatButton(
+                        onPressed: () =>
+                            Navigator.pop(context, false), // passing false
+                        child: Text('No'),
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          auth.signOut();
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => Login()));
+                        },
+                        /*onPressed: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => Login()));
-                      }, // 
+                      },*/ //
 
-                      child: Text('Yes'),
-                    ),
-                  ],
-                );
-              })
-        ),
+                        child: Text('Yes'),
+                      ),
+                    ],
+                  );
+                })),
         ListTile(
-          leading: CircleAvatar(
-            child: Icon(Icons.close, color: Colors.white,), backgroundColor: Colors.black54,
-          ),
+            leading: CircleAvatar(
+              child: Icon(
+                Icons.close,
+                color: Colors.white,
+              ),
+              backgroundColor: Colors.black54,
+            ),
             title: Text("Exit"),
             onTap: () => showDialog(
                 context: context,
@@ -223,7 +256,8 @@ class _MenuState extends State<Menu> {
                     title: Text('Do you want to exit?'),
                     actions: [
                       FlatButton(
-                        onPressed: () => Navigator.pop(context, false), // passing false
+                        onPressed: () => Navigator.pop(context, false),
+                        // passing false
                         child: Text('No'),
                       ),
                       FlatButton(
@@ -232,9 +266,7 @@ class _MenuState extends State<Menu> {
                       ),
                     ],
                   );
-                })
-
-        ),
+                })),
       ],
     );
     return Scaffold(
@@ -242,10 +274,6 @@ class _MenuState extends State<Menu> {
         child: drawerItems,
         color: Colors.white,
       ),
-
     );
-
   }
-
 }
-
