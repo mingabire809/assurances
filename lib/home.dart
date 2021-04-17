@@ -9,9 +9,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'menu.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key, this.title, this.uid}) : super(key: key);
 
   final String title;
+  final String uid;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();

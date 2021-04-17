@@ -1,11 +1,18 @@
 import 'package:assurance/login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'home.dart';
 import 'login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:auth/auth.dart';
 class Registration extends StatefulWidget {
+  final auth = FirebaseAuth.instance;
+  void inputData() async {
+    final FirebaseUser user = await auth.currentUser();
+    final uid = user.uid;
+    // here you write the codes to input the data into firestore
+  }
   @override
   _RegistrationState createState() => _RegistrationState();
 }
@@ -16,6 +23,7 @@ class _RegistrationState extends State<Registration> {
   bool isDateSelected = false;
   DateTime birthDate; // instance of DateTime
   String birthDateInString;
+
   final _fullnameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phonenumberController = TextEditingController();
@@ -25,9 +33,15 @@ class _RegistrationState extends State<Registration> {
   final _repasswordController = TextEditingController();
   String _dropDownValue;
   final auth = FirebaseAuth.instance;
+  void inputData() async {
+    final FirebaseUser user = await auth.currentUser();
+    final uid = user.uid;
+    // here you write the codes to input the data into firestore
+  }
 
   @override
   Widget build(BuildContext context) {
+
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
@@ -252,7 +266,66 @@ class _RegistrationState extends State<Registration> {
                     shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     ),
-                    onPressed: () {
+                  onPressed: () {
+
+                      if (_passwordController.text ==
+                          _repasswordController.text) {
+
+
+                            auth.createUserWithEmailAndPassword(
+                            email: _emailController.text,
+                            password: _passwordController.text)
+                            .then((currentUser) => Firestore.instance
+                            .collection("users")
+                            .document(currentUser.user.uid)
+                            .setData({
+                          "Full name": _fullnameController.text,
+                          "Email": _emailController.text,
+                          "Phone Number": _phonenumberController.text,
+                          "Profession": _professionController.text,
+                          "Address": _addressController.text,
+                          "BirthDate": birthDateInString,
+                          "Gender": _dropDownValue,
+
+                        })
+                            .then((result) => {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyHomePage()),
+                                  (_) => true),
+                          _fullnameController.clear(),
+                          _emailController.clear(),
+                          _phonenumberController.clear(),
+                          _professionController.clear(),
+                          _addressController.clear(),
+                          _passwordController.clear(),
+                          _repasswordController.clear(),
+                        })
+                            .catchError((err) => print(err)))
+                            .catchError((err) => print(err));
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Error"),
+                                content: Text("The passwords do not match"),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text("Close"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            });
+                      }
+
+                  },
+                ),
+                   /* onPressed: () {
                       auth
                           .createUserWithEmailAndPassword(
                               email: _emailController.text,
@@ -261,7 +334,7 @@ class _RegistrationState extends State<Registration> {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) => MyHomePage()));
                       });
-                    }
+                    }*/
                     /*onPressed: () {
                     if (_passwordController.text != _repasswordController.text)
                       _showMyDialog();
@@ -269,13 +342,16 @@ class _RegistrationState extends State<Registration> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => MyHomePage()));
                   },*/
+      ]
                     )
               ],
+        )
             ),
-          ],
-        ),
-      ),
-    );
+
+        );
+
+
+
   }
 
   Future<void> _showMyDialog() async {

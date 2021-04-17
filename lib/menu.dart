@@ -1,18 +1,22 @@
 import 'dart:io';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 import 'package:assurance/about.dart';
 import 'package:assurance/camera.dart';
 import 'package:assurance/category.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:assurance/locator.dart';
 import 'package:assurance/login.dart';
-
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'map.dart';
+import 'package:flutter/src/widgets/basic.dart';
+import 'package:flutter/src/widgets/scroll_view.dart';
 
 class Menu extends StatefulWidget {
+
   @override
   _MenuState createState() => _MenuState();
 }
@@ -20,6 +24,31 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
   final auth = FirebaseAuth.instance;
   File _image;
+  FirebaseUser currentUser;
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCurrentUser();
+  }
+
+  void _loadCurrentUser() {
+    FirebaseAuth.instance.currentUser().then((FirebaseUser user) {
+      setState(() { // call setState to rebuild the view
+        this.currentUser = user;
+      });
+    });
+  }
+
+  String _email() {
+    if (currentUser != null) {
+      return currentUser.email;
+    } else {
+      return "no current user";
+    }
+  }
 
   _imgFromCamera() async {
     File image = await ImagePicker.pickImage(
@@ -72,9 +101,10 @@ class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
 
+
     var drawerHeader = UserAccountsDrawerHeader(
-      accountName: Text("Full Name"),
-      accountEmail: Text("user.name@email.com"),
+     // accountName: Text(_userName),
+      accountEmail: Text(_email()),
       decoration: BoxDecoration(color: Colors.black38),
       currentAccountPicture: CircleAvatar(
         radius: 55,
@@ -277,3 +307,14 @@ class _MenuState extends State<Menu> {
     );
   }
 }
+class AuthNotifier with ChangeNotifier {
+  FirebaseUser _email;
+
+  FirebaseUser get email => _email;
+
+  void setUser(FirebaseUser user) {
+    _email = email;
+    notifyListeners();
+  }
+}
+
