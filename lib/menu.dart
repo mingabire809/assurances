@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:assurance/userdata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
@@ -124,7 +125,7 @@ class _MenuState extends State<Menu> {
 
 
       var drawerHeader = UserAccountsDrawerHeader(
-     // accountName: Text(_userName),
+      //accountName: Text(''),
       accountEmail: Text(_email()),
       decoration: BoxDecoration(color: Colors.black38),
       currentAccountPicture: CircleAvatar(
@@ -168,7 +169,22 @@ class _MenuState extends State<Menu> {
               ),
               backgroundColor: Colors.black54),
           title: Text("Home"),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoadDataFromFirestore()),
+            );
+          },
+/*onTap: () async {
+  String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+ DocumentSnapshot snapshot = await Firestore.instance.collection('users').document(instructor).get();
+  var channelName = snapshot['channelName'];
+  if (channelName is String) {
+    return channelName;
+  } 
 
+
+},*/
         ),
         ListTile(
           leading: CircleAvatar(
