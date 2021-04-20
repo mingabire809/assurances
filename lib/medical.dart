@@ -1,10 +1,22 @@
 import 'package:assurance/category.dart';
 import 'package:assurance/register.dart';
+import 'package:auth/auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+//import 'package:provider/provider.dart';
+import 'package:assurance/provider.dart';
 
 
 
 class Medical extends StatefulWidget{
+
+  final auth = FirebaseAuth.instance;
+  void inputData() async {
+    final FirebaseUser user = await auth.currentUser();
+    final uid = user.uid;
+    // here you write the codes to input the data into firestore
+  }
   @override
   _MedicalState createState() => _MedicalState();
 }
@@ -12,8 +24,61 @@ class _MedicalState extends State<Medical>{
   String _dropDownVal;
   String _dropCover;
   String _dropNumber;
+  final auth = FirebaseAuth.instance;
+
+  Widget _appBarTitle = new Text( 'Medical Cover');
+  void inputData() async {
+    final FirebaseUser user = await auth.currentUser();
+    final uid = user.uid;
+    // here you write the codes to input the data into firestore
+  }
+  Future<String> getCurrentUID() async{
+    //final FirebaseUser user = await auth.currentUser();
+    //final String uid = user.uid;
+    return  (await auth.currentUser()).uid;
+
+
+  }
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  getCurrentUser() async {
+    final FirebaseUser user = await _auth.currentUser();
+    final uid = user.uid;
+    // Similarly we can get email as well
+    //final uemail = user.email;
+    print(uid);
+    //print(uemail);
+  }
+  Future<String> inputDat() async {
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final String uid = user.uid.toString();
+    return uid;
+  }
+
+  final databaseReference = Firestore.instance;
+  void createRecord() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection("Cover").document("Cover Details")
+        .updateData({
+      'Cover':'$_appBarTitle' ,
+      'Type of Cover':'$_dropDownVal' ,
+      'Period of cover':'$_dropCover' ,
+      'Number of person under cover':'$_dropNumber',
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => Register()));
+    });
+  }
   @override
+
   Widget build(BuildContext context) {
+   /* Future<String> getCurrentUID() async{
+      //final FirebaseUser user = await auth.currentUser();
+      //final String uid = user.uid;
+      return  (await auth.currentUser()).uid;
+
+
+    }*/
 
     return Scaffold(
       appBar: AppBar(
@@ -26,7 +91,7 @@ class _MedicalState extends State<Medical>{
             },
           );
         }),
-        title: Text("Medical Cover"),
+        title: _appBarTitle,
       ),
       body: Container(
         child: ListView(
@@ -125,10 +190,35 @@ class _MedicalState extends State<Medical>{
                     shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     ),
-                    onPressed: () {
+                    onPressed: () async{
+                      createRecord();
+
+                    },
+                    /*onPressed: () async {
+                    //  final uid = await Provider.of(context).auth.getCurrentUID();
+                    //  String uid = FirebaseAuth.instance.currentUser.getuid();
+                      String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+                    //  FirebaseAuth currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                      //if(currentUser != null)
+                        //String uid = currentUser.getUid();
+                      Firestore.instance
+                          .collection("users")
+                          .document(instructor).collection('cover')
+                          .add({
+                        "Cover":_appBarTitle ,
+                        "Type of Cover":_dropDownVal ,
+                        "Period of cover":_dropDownVal ,
+                        "Number of person under cover":_dropNumber,
+
+                      }).then((_) {
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => Register()));
+                      });
+                    },*/
+                    /*onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => Register()));
-                    },
+                    },*/
                   )
                 ],
               ),
@@ -143,3 +233,17 @@ class _MedicalState extends State<Medical>{
   }
 
 }
+/*class Provider extends InheritedWidget {
+
+  final db;
+
+  Provider({Key key, Widget child, this.db}) : super(key: key, child: child);
+
+  @override
+  bool updateShouldNotify(InheritedWidget oldWidget) {
+    return true;
+  }
+
+  static Provider of(BuildContext context) =>
+      (context.dependOnInheritedWidgetOfExactType<Provider>());
+}*/

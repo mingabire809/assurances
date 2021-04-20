@@ -1,4 +1,6 @@
 import 'package:assurance/register.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'category.dart';
@@ -11,6 +13,24 @@ class House extends StatefulWidget{
 class _HouseState extends State<House>{
   String _dropDownType;
   String _dropDownPeriod;
+  final auth = FirebaseAuth.instance;
+
+  Widget _appBarTitle = new Text( 'House Insurance');
+  final databaseReference = Firestore.instance;
+  void createRecord() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection("Cover").document("Cover Details")
+        .updateData({
+      'Cover':'$_appBarTitle' ,
+      'Type of Cover':'$_dropDownType' ,
+      'Period of cover':'$_dropDownPeriod' ,
+
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => Register()));
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +44,7 @@ class _HouseState extends State<House>{
             },
           );
         }),
-        title: Text("House"),
+        title: _appBarTitle,
       ),
       body: Container(
         child: ListView(
@@ -98,8 +118,7 @@ class _HouseState extends State<House>{
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Register()));
+                    createRecord();
                   },
                 )
               ],

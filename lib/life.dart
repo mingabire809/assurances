@@ -1,4 +1,6 @@
 import 'package:assurance/register.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'category.dart';
@@ -11,6 +13,26 @@ class Life extends StatefulWidget{
 class _LifeState extends State<Life>{
   String _dropDownTypeLife;
   String _dropDownTimeLife;
+  final _amount = TextEditingController();
+  final auth = FirebaseAuth.instance;
+
+  Widget _appBarTitle = new Text( 'Life Cover');
+  final databaseReference = Firestore.instance;
+  void createRecord() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection("Cover").document("Cover Details")
+        .updateData({
+      'Cover':'$_appBarTitle' ,
+      'Type of Cover':'$_dropDownTypeLife' ,
+      'Period of cover':'$_dropDownTimeLife' ,
+      'Amount Assured': _amount.text,
+
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => Register()));
+    });
+  }
   @override
   Widget build(BuildContext context) {
 return Scaffold(
@@ -82,6 +104,7 @@ return Scaffold(
           },
         ),
         TextField(
+          controller: _amount,
           decoration: InputDecoration(
             icon: Icon(Icons.monetization_on_sharp),
             fillColor: Colors.white,

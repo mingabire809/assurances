@@ -1,4 +1,6 @@
 import 'package:assurance/register.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'category.dart';
@@ -9,7 +11,24 @@ class Disability extends StatefulWidget{
   _DisabilityState createState() => _DisabilityState();
 }
 class _DisabilityState extends State<Disability>{
+  final _amount = TextEditingController();
+  final auth = FirebaseAuth.instance;
 
+  Widget _appBarTitle = new Text( 'Disability Cover');
+  final databaseReference = Firestore.instance;
+  void createRecord() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection("Cover").document("Cover Details")
+        .updateData({
+      'Cover':'$_appBarTitle' ,
+      'Amount Assured':_amount.text ,
+
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => Register()));
+    });
+  }
   @override
   Widget build(BuildContext context) {
   return Scaffold(
@@ -23,12 +42,13 @@ class _DisabilityState extends State<Disability>{
           },
         );
       }),
-      title: Text("Disability"),
+      title: _appBarTitle,
     ),
     body: Container(
       child: ListView(
         children:<Widget> [
           TextField(
+            controller: _amount,
             decoration: InputDecoration(
               icon: Icon(Icons.monetization_on_sharp),
               fillColor: Colors.white,
@@ -61,8 +81,7 @@ class _DisabilityState extends State<Disability>{
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Register()));
+                 createRecord();
                 },
               )
             ],

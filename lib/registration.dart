@@ -13,6 +13,7 @@ class Registration extends StatefulWidget {
     final uid = user.uid;
     // here you write the codes to input the data into firestore
   }
+
   @override
   _RegistrationState createState() => _RegistrationState();
 }
@@ -33,6 +34,7 @@ class _RegistrationState extends State<Registration> {
   final _repasswordController = TextEditingController();
   String _dropDownValue;
   final auth = FirebaseAuth.instance;
+
   void inputData() async {
     final FirebaseUser user = await auth.currentUser();
     final uid = user.uid;

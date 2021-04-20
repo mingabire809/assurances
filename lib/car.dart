@@ -1,4 +1,6 @@
 import 'package:assurance/register.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'category.dart';
@@ -11,6 +13,24 @@ class Car extends StatefulWidget{
 class _CarState extends State<Car>{
   String _dropDownCar;
   String _dropCover;
+  final auth = FirebaseAuth.instance;
+
+  Widget _appBarTitle = new Text( 'Car');
+  final databaseReference = Firestore.instance;
+  void createRecord() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection("Cover").document("Cover Details")
+        .updateData({
+      'Cover':'$_appBarTitle' ,
+      'Type of Cover':'$_dropDownCar' ,
+      'Period of cover':'$_dropCover' ,
+
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => Register()));
+    });
+  }
   @override
   Widget build(BuildContext context) {
   return Scaffold(
@@ -24,7 +44,7 @@ class _CarState extends State<Car>{
           },
         );
       }),
-      title: Text("Car"),
+      title: _appBarTitle,
     ),
     body: Container(
       child: ListView(
@@ -100,8 +120,7 @@ class _CarState extends State<Car>{
                   borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Register()));
+                  createRecord();
                 },
               )
             ],

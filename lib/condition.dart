@@ -1,18 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'home.dart';
+import 'package:assurance/medical.dart';
 
 class Condition extends StatefulWidget{
+  final auth = FirebaseAuth.instance;
+  void inputData() async {
+    final FirebaseUser user = await auth.currentUser();
+    final uid = user.uid;
+
+    // here you write the codes to input the data into firestore
+  }
   @override
   _ConditionState createState() => _ConditionState();
 }
 class _ConditionState extends State<Condition>{
+  final auth = FirebaseAuth.instance;
+  void inputData() async {
+    final FirebaseUser user = await auth.currentUser();
+    final uid = user.uid;
+    // here you write the codes to input the data into firestore
+  }
   bool checkedValue = false;
   DateTime selectData;
   String initValue = "Select your Debut Date";
   bool isDateSelected = false;
   DateTime coverStarting; // instance of DateTime
   String birthDateInString;
+  final databaseReference = Firestore.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,9 +91,58 @@ class _ConditionState extends State<Condition>{
                   shape: BeveledRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MyHomePage()));
+                  onPressed: () async {
+                    if(checkedValue != false) {
+                      String instructor = (await FirebaseAuth.instance
+                          .currentUser()).uid;
+                      await databaseReference.collection("users")
+                          .document(instructor).collection('Cover').document(
+                          "Cover Details")
+                          .updateData({
+                        'Starting Date': '$birthDateInString',
+                         'Agreement': 'I Agree that the following Insurance company'
+                                      ' will be covering me and that I will provide all '
+                                       'the required information for the period of cover',
+
+                      }).then((_) {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Condition"),
+                                content: Text("The Request has been completed!"
+                                       "Your provider will be in touch with you Shortly"),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text("Ok"),
+                                    onPressed: () {
+                                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                        builder: (context) => MyHomePage()));
+                                    },
+                                  )
+                                ],
+                              );
+                            });
+
+                      });
+                    }
+                    else
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Condition"),
+                              content: Text("You must agree Terms and Conditions!!"),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text("ok"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                )
+                              ],
+                            );
+                          });
                   },
                 )
               ],

@@ -1,4 +1,6 @@
 import 'package:assurance/register.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'category.dart';
@@ -11,6 +13,24 @@ class Business extends StatefulWidget{
 class _BusinessState extends State<Business>{
   String _dropDownBusiness;
   String _dropDownTimeBusiness;
+  final auth = FirebaseAuth.instance;
+
+  Widget _appBarTitle = new Text( 'Business Cover');
+  final databaseReference = Firestore.instance;
+  void createRecord() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection("Cover").document("Cover Details")
+        .updateData({
+      'Cover':'$_appBarTitle' ,
+      'Type of Cover':'$_dropDownBusiness' ,
+      'Period of cover':'$_dropDownTimeBusiness' ,
+
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => Register()));
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +44,7 @@ class _BusinessState extends State<Business>{
             },
           );
         }),
-        title: Text("Business"),
+        title: _appBarTitle,
       ),
       body: Container(
         child: ListView(
@@ -113,9 +133,8 @@ class _BusinessState extends State<Business>{
                   shape: BeveledRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Register()));
+                  onPressed: () async {
+                    createRecord();
                   },
                 )
               ],

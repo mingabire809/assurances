@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'package:assurance/about.dart';
 import 'package:assurance/camera.dart';
@@ -7,6 +8,7 @@ import 'package:assurance/category.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:assurance/locator.dart';
 import 'package:assurance/login.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,7 +27,11 @@ class _MenuState extends State<Menu> {
   final auth = FirebaseAuth.instance;
   File _image;
   FirebaseUser currentUser;
-
+  void inputData() async {
+    final FirebaseUser user = await auth.currentUser();
+    final uid = user.uid;
+    // here you write the codes to input the data into firestore
+  }
 
 
   @override
@@ -33,6 +39,7 @@ class _MenuState extends State<Menu> {
     super.initState();
     _loadCurrentUser();
   }
+
 
   void _loadCurrentUser() {
     FirebaseAuth.instance.currentUser().then((FirebaseUser user) {
@@ -97,12 +104,26 @@ class _MenuState extends State<Menu> {
           );
         });
   }
+  final databaseReference = Firestore.instance;
+  Future<void> getData() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    databaseReference
+        .collection(instructor)
+        .getDocuments()
+        .then((QuerySnapshot snapshot) {
+      snapshot.documents.forEach((f) => '${f.data}}');
+    });
+  }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
 
 
-    var drawerHeader = UserAccountsDrawerHeader(
+      var drawerHeader = UserAccountsDrawerHeader(
      // accountName: Text(_userName),
       accountEmail: Text(_email()),
       decoration: BoxDecoration(color: Colors.black38),
@@ -147,17 +168,29 @@ class _MenuState extends State<Menu> {
               ),
               backgroundColor: Colors.black54),
           title: Text("Home"),
+
         ),
         ListTile(
           leading: CircleAvatar(
             backgroundImage: AssetImage("images/cover.jpg"),
           ),
           title: Text("Cover"),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Category()),
-            );
+          onTap: () async {
+            String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+            await databaseReference.collection("users")
+                .document(instructor).collection("Cover").document("Cover Details")
+                .setData({
+            'Agreement': '',
+            'Cover': '' ,
+            'Period of cover':'' ,
+            'Provider': '',
+            'Starting Date': '',
+            'Amount Assured': '',
+
+            }).then((_) {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => Category()));
+            });
           },
         ),
         ListTile(
@@ -307,14 +340,8 @@ class _MenuState extends State<Menu> {
     );
   }
 }
-class AuthNotifier with ChangeNotifier {
-  FirebaseUser _email;
 
-  FirebaseUser get email => _email;
 
-  void setUser(FirebaseUser user) {
-    _email = email;
-    notifyListeners();
-  }
-}
+
+
 
