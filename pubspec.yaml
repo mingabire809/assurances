@@ -42,7 +42,10 @@ dependencies:
   auth: ^3.2.0
   firebase_storage:
   permission_handler: ^5.0.1+1
-
+  firebase_remote_config: ^0.3.0+3
+  get_it: ^5.0.6
+  firebase_messaging: ^6.0.16
+  flutter_local_notifications: ^1.4.4+5
 
 
 

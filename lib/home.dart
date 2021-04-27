@@ -2,11 +2,14 @@ import 'package:assurance/login.dart';
 import 'package:assurance/partner.dart';
 import 'package:assurance/search.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'menu.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title, this.uid}) : super(key: key);
@@ -23,9 +26,12 @@ class _MyHomePageState extends State<MyHomePage> {
   final dio = new Dio();
   String _searchText = "";
   List names = new List();
+  bool _newNotificaions = false;
+  final FirebaseMessaging _fcm = FirebaseMessaging();
   List filteredNames = new List();
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( 'Assurance' );
+  String author,channel,web;
 
  /* _ExamplePageState() {
     _filter.addListener(() {
@@ -41,6 +47,116 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     });
   }*/
+  @override
+  void initState(){
+    super.initState();
+    _fcm.configure(
+      onMessage: (Map<String, dynamic> message)async{
+        print("onMessage: $message");
+        setState(() {
+          _newNotificaions = true;
+        });
+        final snackbar = SnackBar(content: Text(message['notification']['title']),
+          action: SnackBarAction(
+            label: 'Go',
+            onPressed: () => showDialog(context: context,
+                builder: (context)=> AlertDialog(
+                  content: ListTile(
+                    title: Text(message['notification']['title']),
+                    subtitle: Text(message['title']['body']),
+                  ),
+                  actions:<Widget> [
+                    FlatButton(onPressed: ()=> Navigator.of(context).pop(), child: Text('OK'))
+                  ],
+                )
+            ),
+          ) ,
+        );
+        Scaffold.of(context).showSnackBar(snackbar);
+        showDialog(context: context,
+            builder: (context)=> AlertDialog(
+              content: ListTile(
+                title: Text(message['notification']['title']),
+                subtitle: Text(message['title']['body']),
+              ),
+              actions:<Widget> [
+                FlatButton(onPressed: ()=> Navigator.of(context).pop(), child: Text('OK'))
+              ],
+            )
+        );
+      },
+
+      onResume: (Map<String, dynamic> message)async{
+        print("onResume: $message");
+        showDialog(context: context,
+            builder: (context)=> AlertDialog(
+              content: ListTile(
+                title: Text(message['notification']['title']),
+                subtitle: Text(message['title']['body']),
+              ),
+              actions:<Widget> [
+                FlatButton(onPressed: ()=> Navigator.of(context).pop(), child: Text('OK'))
+              ],
+            )
+        );
+      },
+      onLaunch: (Map<String, dynamic> message)async{
+        print("onLaunch: $message");
+        showDialog(context: context,
+            builder: (context)=> AlertDialog(
+              content: ListTile(
+                title: Text(message['notification']['title']),
+                subtitle: Text(message['title']['body']),
+              ),
+              actions:<Widget> [
+                FlatButton(onPressed: ()=> Navigator.of(context).pop(), child: Text('OK'))
+              ],
+            )
+        );
+      },
+    );
+    _saveDeviceToken() async {
+      // Get the current user
+      String uid = 'jeffd23';
+      // FirebaseUser user = await _auth.currentUser();
+
+      // Get the token for this device
+      String fcmToken = await _fcm.getToken();
+
+      // Save it to Firestore
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_)async {
+      final remoteConfig = await RemoteConfig.instance;
+      final defaults = <String, dynamic>{
+       'author': 'Me',
+       'channel': 'You'
+      };
+      setState(() {
+        author = defaults['author'];
+        channel = defaults['channel'];
+      });
+      await remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
+      await remoteConfig.fetch(expiration: const Duration(hours: 0));
+      await remoteConfig.activateFetched();
+      setState(() {
+        author = remoteConfig.getString('author');
+        channel = remoteConfig.getString('channel');
+        web = remoteConfig.getString('web');
+      });
+    });
+
+  }
+  _launch() async {
+    String url = web;
+      //  "https://economictimes.indiatimes.com/small-biz/money/insurances-for-it-companies-why-you-need-it-and-how-to-go-about-it/articleshow/60709051.cms?from=mdr";
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+
   @override
  /* void initState() {
     this._getNames();
@@ -92,9 +208,20 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
 
+
           child: ListView(
             children: <Widget>[
               SizedBox(height: 10.0),
+             /* if(model.showMainBanner)
+                Container(
+                  height: 80.0,
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  margin: const EdgeInsets.symmetric(vertical: 15),
+                  child: Text("Everything you need to cove yourself"),
+                ),*/
+              Text('Author: $author',style: TextStyle(color: Colors.white)),
+              Text('Channel: $channel',style: TextStyle(color: Colors.white)),
               RichText(
                   text: TextSpan(children: <TextSpan>[
                     TextSpan(
@@ -107,6 +234,16 @@ class _MyHomePageState extends State<MyHomePage> {
                               MaterialPageRoute(
                                   builder: (context) => Partner()),
                             );
+                          })
+                  ])),
+              RichText(
+                  text: TextSpan(children: <TextSpan>[
+                    TextSpan(
+                        text: "Web",
+                        style: TextStyle(color: Colors.white, fontSize: 20.0),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            _launch();
                           })
                   ])),
               SizedBox(height: 15.0),

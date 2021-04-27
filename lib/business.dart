@@ -1,4 +1,5 @@
 import 'package:assurance/register.dart';
+import 'package:assurance/registerbusiness.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class _BusinessState extends State<Business>{
   String _dropDownBusiness;
   String _dropDownTimeBusiness;
   final auth = FirebaseAuth.instance;
+  final amount = TextEditingController();
 
   Widget _appBarTitle = new Text( 'Business Cover');
   final databaseReference = Firestore.instance;
@@ -29,6 +31,74 @@ class _BusinessState extends State<Business>{
     }).then((_) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => Register()));
+    });
+  }
+  void createBusiness() async{
+
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection("Cover").document("Business")
+        .setData({
+
+      'Type of Cover':'$_dropDownBusiness' ,
+      'Period of cover':'$_dropDownTimeBusiness' ,
+      'Provider': '',
+      'Starting Date': '',
+      'Agreement': '',
+
+
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => RegisterBusiness()));
+    });
+
+  }
+
+  getDetails() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    return await Firestore.instance.collection('users').document(instructor).get();
+  }
+  void initState() {
+    super.initState();
+    getDetails().then((results) {
+      setState(() {
+        querySnapshot = results;
+      });
+    });
+  }
+
+  DocumentSnapshot querySnapshot;
+  void business() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection('Cover').document('Business')
+        .setData({
+      'Type of Cover':'$_dropDownBusiness' ,
+      'Period of cover':'$_dropDownTimeBusiness' ,
+      'Amount Assured':amount.text,
+      'Provider': '',
+      'Starting Date': '',
+      'Agreement': '',
+
+    }).then((_) async {
+      await databaseReference.collection("Cover")
+          .document(instructor)
+          .setData({
+        'Name':' ${querySnapshot.data['Full name']}',
+        'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
+        'Email':'${querySnapshot.data['Email']}' ,
+        'Cover':'$_appBarTitle' ,
+        'Type of Cover':'$_dropDownBusiness' ,
+        'Period of cover':'$_dropDownTimeBusiness' ,
+        'Amount Assured':amount.text,
+        'Provider': '',
+        'Starting Date': '',
+        'Agreement': '',
+
+      });
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => RegisterBusiness()));
     });
   }
   @override
@@ -102,6 +172,7 @@ class _BusinessState extends State<Business>{
               },
             ),
             TextField(
+              controller: amount,
               decoration: InputDecoration(
                 icon: Icon(Icons.monetization_on_sharp),
                 fillColor: Colors.white,
@@ -134,7 +205,9 @@ class _BusinessState extends State<Business>{
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
                   onPressed: () async {
-                    createRecord();
+                   // createRecord();
+                   // createBusiness();
+                    business();
                   },
                 )
               ],

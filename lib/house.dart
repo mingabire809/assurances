@@ -1,4 +1,5 @@
 import 'package:assurance/register.dart';
+import 'package:assurance/registerhouse.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,70 @@ class _HouseState extends State<House>{
     }).then((_) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => Register()));
+    });
+  }
+  void createHouse() async{
+
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection("Cover").document("House")
+        .setData({
+
+      'Type of Cover':'$_dropDownType' ,
+      'Period of cover':'$_dropDownPeriod' ,
+      'Provider': '',
+      'Starting Date': '',
+      'Agreement': '',
+
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => RegisterHouse()));
+    });
+
+  }
+  getDetails() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    return await Firestore.instance.collection('users').document(instructor).get();
+  }
+  void initState() {
+    super.initState();
+    getDetails().then((results) {
+      setState(() {
+        querySnapshot = results;
+      });
+    });
+  }
+
+  DocumentSnapshot querySnapshot;
+  void house() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection('Cover').document('House')
+        .setData({
+      'Type of Cover':'$_dropDownType' ,
+      'Period of cover':'$_dropDownPeriod' ,
+      'Provider': '',
+      'Starting Date': '',
+      'Agreement': '',
+
+    }).then((_) async {
+      await databaseReference.collection("Cover")
+          .document(instructor)
+          .setData({
+        'Name':' ${querySnapshot.data['Full name']}',
+        'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
+        'Email':'${querySnapshot.data['Email']}' ,
+        'Cover':'$_appBarTitle' ,
+        'Type of Cover':'$_dropDownType' ,
+        'Period of cover':'$_dropDownPeriod' ,
+        'Provider': '',
+        'Starting Date': '',
+        'Agreement': '',
+
+      });
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => RegisterHouse()));
     });
   }
   @override
@@ -118,7 +183,9 @@ class _HouseState extends State<House>{
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
                   onPressed: () {
-                    createRecord();
+                  //  createRecord();
+                   // createHouse();
+                    house();
                   },
                 )
               ],

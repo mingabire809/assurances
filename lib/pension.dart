@@ -1,4 +1,5 @@
 import 'package:assurance/register.dart';
+import 'package:assurance/registerpension.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,11 +24,77 @@ class _PensionState extends State<Pension>{
         .updateData({
       'Cover':'$_appBarTitle' ,
       'Period of cover':'$_dropDownTime' ,
-      'Amount Assured': _amount,
+      'Amount Assured': _amount.text,
 
     }).then((_) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => Register()));
+    });
+  }
+
+  void createPension() async{
+
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection("Cover").document("Pension")
+        .setData({
+
+      'Period of cover':'$_dropDownTime' ,
+      'Amount Assured': _amount.text,
+      'Provider': '',
+      'Starting Date': '',
+      'Agreement': '',
+
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => RegisterPension()));
+    });
+
+  }
+
+  getDetails() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    return await Firestore.instance.collection('users').document(instructor).get();
+  }
+  void initState() {
+    super.initState();
+    getDetails().then((results) {
+      setState(() {
+        querySnapshot = results;
+      });
+    });
+  }
+
+  DocumentSnapshot querySnapshot;
+  void pension() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection('Cover').document('Pension')
+        .setData({
+      'Period of cover':'$_dropDownTime' ,
+      'Amount Assured': _amount.text,
+      'Provider': '',
+      'Starting Date': '',
+      'Agreement': '',
+
+    }).then((_) async {
+      await databaseReference.collection("Cover")
+          .document(instructor)
+          .setData({
+        'Name':' ${querySnapshot.data['Full name']}',
+        'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
+        'Email':'${querySnapshot.data['Email']}' ,
+        'Cover':'$_appBarTitle' ,
+        'Period of cover':'$_dropDownTime' ,
+        'Amount Assured': _amount.text,
+        'Provider': '',
+        'Starting Date': '',
+        'Agreement': '',
+
+      });
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => RegisterPension()));
     });
   }
   @override
@@ -108,7 +175,9 @@ class _PensionState extends State<Pension>{
                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
                  ),
                  onPressed: () {
-                   createRecord();
+                  // createRecord();
+                 //  createPension();
+                   pension();
                  },
                )
              ],

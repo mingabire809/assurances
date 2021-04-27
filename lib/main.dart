@@ -1,7 +1,10 @@
+import 'package:assurance/locat.dart';
 import 'package:flutter/material.dart';
 import 'app.dart';
-import 'package:firebase_core/firebase_core.dart';
-void main() {
+
+Future<void> main() async{
+ WidgetsFlutterBinding.ensureInitialized();
+ await setupLocat();
   runApp(MyApp());
 }
 

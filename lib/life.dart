@@ -1,4 +1,5 @@
 import 'package:assurance/register.dart';
+import 'package:assurance/registerlife.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,75 @@ class _LifeState extends State<Life>{
     }).then((_) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => Register()));
+    });
+  }
+  void createLife() async{
+
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection("Cover").document("Life")
+        .setData({
+
+      'Type of Cover':'$_dropDownTypeLife' ,
+      'Period of cover':'$_dropDownTimeLife' ,
+      'Amount Assured': _amount.text,
+      'Provider': '',
+      'Starting Date': '',
+      'Agreement': '',
+
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => RegisterLife()));
+    });
+
+  }
+
+
+  getDetails() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    return await Firestore.instance.collection('users').document(instructor).get();
+  }
+  void initState() {
+    super.initState();
+    getDetails().then((results) {
+      setState(() {
+        querySnapshot = results;
+      });
+    });
+  }
+
+  DocumentSnapshot querySnapshot;
+  void life() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    await databaseReference.collection("users")
+        .document(instructor).collection('Cover').document('Life')
+        .setData({
+      'Type of Cover':'$_dropDownTypeLife' ,
+      'Period of cover':'$_dropDownTimeLife' ,
+      'Amount Assured': _amount.text,
+      'Provider': '',
+      'Starting Date': '',
+      'Agreement': '',
+
+    }).then((_) async {
+      await databaseReference.collection("Cover")
+          .document(instructor)
+          .setData({
+        'Name':' ${querySnapshot.data['Full name']}',
+        'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
+        'Email':'${querySnapshot.data['Email']}' ,
+        'Cover':'$_appBarTitle' ,
+        'Type of Cover':'$_dropDownTypeLife' ,
+        'Period of cover':'$_dropDownTimeLife' ,
+        'Amount Assured': _amount.text,
+        'Provider': '',
+        'Starting Date': '',
+        'Agreement': '',
+
+      });
+    }).then((_) {
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => RegisterLife()));
     });
   }
   @override
@@ -137,8 +207,8 @@ return Scaffold(
                 borderRadius: BorderRadius.all(Radius.circular(10.0)),
               ),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Register()));
+               // createLife();
+                life();
               },
             )
           ],

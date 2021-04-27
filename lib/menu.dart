@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:assurance/currentcover.dart';
+import 'package:assurance/retrievecover.dart';
 import 'package:assurance/userdata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -18,6 +20,7 @@ import 'map.dart';
 import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/scroll_view.dart';
 
+
 class Menu extends StatefulWidget {
 
   @override
@@ -27,6 +30,7 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
   final auth = FirebaseAuth.instance;
   File _image;
+  final picker = ImagePicker();
   FirebaseUser currentUser;
   void inputData() async {
     final FirebaseUser user = await auth.currentUser();
@@ -34,11 +38,32 @@ class _MenuState extends State<Menu> {
     // here you write the codes to input the data into firestore
   }
 
+  Future pickImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
 
+    setState(() {
+      _image = File(pickedFile.path);
+    });
+  }
+  Future uploadImageToFirebase(BuildContext context) async {
+    String fileName = basename(_image.path);
+    StorageReference firebaseStorageRef =
+    FirebaseStorage.instance.ref().child('uploads/$fileName');
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    taskSnapshot.ref.getDownloadURL().then(
+          (value) => print("Done: $value"),
+    );
+  }
   @override
   void initState() {
     super.initState();
     _loadCurrentUser();
+    getDetails().then((results) {
+      setState(() {
+        querySnapshot = results;
+      });
+    });
   }
 
 
@@ -75,6 +100,7 @@ class _MenuState extends State<Menu> {
       _image = image;
     });
   }
+
 
   void _showPicker(context) {
     showModalBottomSheet(
@@ -116,7 +142,20 @@ class _MenuState extends State<Menu> {
     });
   }
 
+  getDetails() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    return await Firestore.instance.collection('users').document(instructor).get();
+  }
+ /* void initStat() {
+    super.initState();
+    getDetails().then((results) {
+      setState(() {
+        querySnapshot = results;
+      });
+    });
+  }*/
 
+  DocumentSnapshot querySnapshot;
 
 
 
@@ -125,7 +164,7 @@ class _MenuState extends State<Menu> {
 
 
       var drawerHeader = UserAccountsDrawerHeader(
-      //accountName: Text(''),
+      accountName: Text(' ${querySnapshot.data['Full name']}'),
       accountEmail: Text(_email()),
       decoration: BoxDecoration(color: Colors.black38),
       currentAccountPicture: CircleAvatar(
@@ -172,7 +211,7 @@ class _MenuState extends State<Menu> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => LoadDataFromFirestore()),
+              MaterialPageRoute(builder: (context) => Retrieve()),
             );
           },
 /*onTap: () async {
@@ -191,7 +230,13 @@ class _MenuState extends State<Menu> {
             backgroundImage: AssetImage("images/cover.jpg"),
           ),
           title: Text("Cover"),
-          onTap: () async {
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Category()),
+            );
+          },
+         /* onTap: () async {
             String instructor = (await FirebaseAuth.instance.currentUser()).uid;
             await databaseReference.collection("users")
                 .document(instructor).collection("Cover").document("Cover Details")
@@ -207,6 +252,18 @@ class _MenuState extends State<Menu> {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (context) => Category()));
             });
+          },*/
+        ),
+        ListTile(
+          leading: CircleAvatar(
+            backgroundImage: AssetImage("images/cover.jpg"),
+          ),
+          title: Text("Current Cover"),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CurrentCover()),
+            );
           },
         ),
         ListTile(
@@ -220,6 +277,23 @@ class _MenuState extends State<Menu> {
           title: Text("Profile"),
           onTap: () {
             _showPicker(context);
+            //uploadImageToFirebase(context);
+          },
+        ),
+        ListTile(
+          leading: CircleAvatar(
+            child: Icon(
+              Icons.person,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.black54,
+          ),
+          title: Text("User Details"),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoadDataFromFirestore()),
+            );
           },
         ),
         ListTile(
@@ -231,6 +305,16 @@ class _MenuState extends State<Menu> {
             backgroundColor: Colors.black54,
           ),
           title: Text("Update"),
+        ),
+        ListTile(
+          leading: CircleAvatar(
+            child: Icon(
+              Icons.update,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.black54,
+          ),
+          title: Text("Camerawesome"),
           onTap: () {
             Navigator.push(
               context,

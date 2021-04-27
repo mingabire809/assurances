@@ -29,8 +29,6 @@ class _LoadDataFromFirestoreState extends State<LoadDataFromFirestore> {
     );
   }
 
-  //build widget as prefered
-  //i'll be using a listview.builder
   Widget _showDetails() {
 
     if (querySnapshot != null) {
@@ -60,7 +58,6 @@ class _LoadDataFromFirestoreState extends State<LoadDataFromFirestore> {
     }
   }
 
-  //get firestore instance
   getDetails() async {
     String instructor = (await FirebaseAuth.instance.currentUser()).uid;
     return await Firestore.instance.collection('users').document(instructor).get();
