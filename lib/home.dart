@@ -1,7 +1,9 @@
 import 'package:assurance/login.dart';
 import 'package:assurance/partner.dart';
 import 'package:assurance/search.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -22,6 +24,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final auth = FirebaseAuth.instance;
+  final databaseReference = Firestore.instance;
   final TextEditingController _filter = new TextEditingController();
   final dio = new Dio();
   String _searchText = "";
@@ -93,6 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
               content: ListTile(
                 title: Text(message['notification']['title']),
                 subtitle: Text(message['title']['body']),
+               // title: Text(message['data']['text']),
+              //  subtitle: Text(message['data']['text']),
               ),
               actions:<Widget> [
                 FlatButton(onPressed: ()=> Navigator.of(context).pop(), child: Text('OK'))
@@ -105,8 +111,10 @@ class _MyHomePageState extends State<MyHomePage> {
         showDialog(context: context,
             builder: (context)=> AlertDialog(
               content: ListTile(
-                title: Text(message['notification']['title']),
-                subtitle: Text(message['title']['body']),
+                title: Text(message['notification']['Notification Title']),
+                subtitle: Text(message['notification']['Notification Text']),
+              //  title: Text(message['data']['text']),
+              //  subtitle: Text(message['data']['text']),
               ),
               actions:<Widget> [
                 FlatButton(onPressed: ()=> Navigator.of(context).pop(), child: Text('OK'))
