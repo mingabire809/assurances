@@ -14,6 +14,7 @@ class RegisterLife extends StatefulWidget{
 }
 class _RegisterLifeState extends State<RegisterLife>{
   final databaseReference = Firestore.instance;
+  String today =  "${DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute)}";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +50,7 @@ class _RegisterLifeState extends State<RegisterLife>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'SOCABU',
 
@@ -77,7 +78,7 @@ class _RegisterLifeState extends State<RegisterLife>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'ASCOMA',
 
@@ -105,7 +106,7 @@ class _RegisterLifeState extends State<RegisterLife>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'BICOR',
 
@@ -133,7 +134,7 @@ class _RegisterLifeState extends State<RegisterLife>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'JUBILEE',
 
@@ -161,7 +162,7 @@ class _RegisterLifeState extends State<RegisterLife>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'MFP',
 
@@ -189,7 +190,7 @@ class _RegisterLifeState extends State<RegisterLife>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'MUTUALITE SOLIS',
 
@@ -245,7 +246,7 @@ class _RegisterLifeState extends State<RegisterLife>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'SOCAR',
 
@@ -274,7 +275,7 @@ class _RegisterLifeState extends State<RegisterLife>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'UCAR',
 
@@ -302,7 +303,7 @@ class _RegisterLifeState extends State<RegisterLife>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'BUSINESS INSURANCE & REINSURANCE',
 
@@ -345,7 +346,7 @@ class _ConditionLifeState extends State<ConditionLife>{
   DateTime coverStarting; // instance of DateTime
   String birthDateInString;
   final databaseReference = Firestore.instance;
-
+  String today =  "${DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute)}";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -421,7 +422,7 @@ class _ConditionLifeState extends State<ConditionLife>{
 
                       }).then((_) async {
                         await databaseReference.collection("Cover")
-                            .document(instructor)
+                            .document(today)
                             .updateData({
                           'Starting Date': '$birthDateInString',
                           'Agreement': 'I Agree that the following Insurance company'

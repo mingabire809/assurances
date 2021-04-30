@@ -26,7 +26,7 @@ class _MedicalState extends State<Medical>{
   String _dropCover;
   String _dropNumber;
   final auth = FirebaseAuth.instance;
-
+  String today =  "${DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute)}";
   Widget _appBarTitle = new Text( 'Medical Cover');
   void inputData() async {
     final FirebaseUser user = await auth.currentUser();
@@ -119,7 +119,7 @@ class _MedicalState extends State<Medical>{
 
     }).then((_) async {
       await databaseReference.collection("Cover")
-          .document(instructor)
+          .document(today)
           .setData({
         'Name':' ${querySnapshot.data['Full name']}',
         'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
@@ -132,7 +132,7 @@ class _MedicalState extends State<Medical>{
         'Starting Date': '',
         'Agreement': '',
 
-      });
+      },merge: true);
     }).then((_) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => RegisterMedical()));

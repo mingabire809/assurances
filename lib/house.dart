@@ -15,7 +15,7 @@ class _HouseState extends State<House>{
   String _dropDownType;
   String _dropDownPeriod;
   final auth = FirebaseAuth.instance;
-
+  String today =  "${DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute)}";
   Widget _appBarTitle = new Text( 'House Insurance');
   final databaseReference = Firestore.instance;
   void createRecord() async {
@@ -78,7 +78,7 @@ class _HouseState extends State<House>{
 
     }).then((_) async {
       await databaseReference.collection("Cover")
-          .document(instructor)
+          .document(today)
           .setData({
         'Name':' ${querySnapshot.data['Full name']}',
         'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
@@ -90,7 +90,7 @@ class _HouseState extends State<House>{
         'Starting Date': '',
         'Agreement': '',
 
-      });
+      },merge: true);
     }).then((_) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => RegisterHouse()));

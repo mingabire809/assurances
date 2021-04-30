@@ -16,7 +16,7 @@ class _LifeState extends State<Life>{
   String _dropDownTimeLife;
   final _amount = TextEditingController();
   final auth = FirebaseAuth.instance;
-
+  String today =  "${DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute)}";
   Widget _appBarTitle = new Text( 'Life Cover');
   final databaseReference = Firestore.instance;
   void createRecord() async {
@@ -84,7 +84,7 @@ class _LifeState extends State<Life>{
 
     }).then((_) async {
       await databaseReference.collection("Cover")
-          .document(instructor)
+          .document(today)
           .setData({
         'Name':' ${querySnapshot.data['Full name']}',
         'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
@@ -97,7 +97,7 @@ class _LifeState extends State<Life>{
         'Starting Date': '',
         'Agreement': '',
 
-      });
+      },merge: true);
     }).then((_) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => RegisterLife()));

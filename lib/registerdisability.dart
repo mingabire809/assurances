@@ -14,6 +14,7 @@ class RegisterDisability extends StatefulWidget{
 }
 class _RegisterDisabilityState extends State<RegisterDisability>{
   final databaseReference = Firestore.instance;
+  String today =  "${DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute)}";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +50,7 @@ class _RegisterDisabilityState extends State<RegisterDisability>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'SOCABU',
 
@@ -77,7 +78,7 @@ class _RegisterDisabilityState extends State<RegisterDisability>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'ASCOMA',
 
@@ -105,7 +106,7 @@ class _RegisterDisabilityState extends State<RegisterDisability>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'BICOR',
 
@@ -133,7 +134,7 @@ class _RegisterDisabilityState extends State<RegisterDisability>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'JUBILEE',
 
@@ -161,7 +162,7 @@ class _RegisterDisabilityState extends State<RegisterDisability>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'MFP',
 
@@ -189,7 +190,7 @@ class _RegisterDisabilityState extends State<RegisterDisability>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'MUTUALITE SOLIS',
 
@@ -217,7 +218,7 @@ class _RegisterDisabilityState extends State<RegisterDisability>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'EAST AFRICA GLOBAL INSURANCE COMPANY NON-VIE',
 
@@ -245,7 +246,7 @@ class _RegisterDisabilityState extends State<RegisterDisability>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'SOCAR',
 
@@ -274,7 +275,7 @@ class _RegisterDisabilityState extends State<RegisterDisability>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'UCAR',
 
@@ -302,7 +303,7 @@ class _RegisterDisabilityState extends State<RegisterDisability>{
 
                 }).then((_) async {
                   await databaseReference.collection("Cover")
-                      .document(instructor)
+                      .document(today)
                       .updateData({
                     'Provider': 'BUSINESS INSURANCE & REINSURANCE',
 
@@ -345,6 +346,7 @@ class _ConditionDisabilityState extends State<ConditionDisability>{
   DateTime coverStarting; // instance of DateTime
   String birthDateInString;
   final databaseReference = Firestore.instance;
+  String today =  "${DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute)}";
 
   @override
   Widget build(BuildContext context) {
@@ -421,7 +423,7 @@ class _ConditionDisabilityState extends State<ConditionDisability>{
 
                       }).then((_) async {
                         await databaseReference.collection("Cover")
-                            .document(instructor)
+                            .document(today)
                             .updateData({
                           'Starting Date': '$birthDateInString',
                           'Agreement': 'I Agree that the following Insurance company'

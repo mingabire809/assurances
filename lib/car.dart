@@ -15,6 +15,7 @@ class _CarState extends State<Car>{
   String _dropDownCar;
   String _dropCover;
   final auth = FirebaseAuth.instance;
+  String today =  "${DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute)}";
 
   Widget _appBarTitle = new Text( 'Car');
   final databaseReference = Firestore.instance;
@@ -79,7 +80,7 @@ class _CarState extends State<Car>{
 
     }).then((_) async {
       await databaseReference.collection("Cover")
-          .document(instructor)
+          .document(today)
           .setData({
         'Name':' ${querySnapshot.data['Full name']}',
         'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
@@ -91,7 +92,7 @@ class _CarState extends State<Car>{
         'Starting Date': '',
         'Agreement': '',
 
-      });
+      },merge: true);
     }).then((_) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => RegisterCar()));

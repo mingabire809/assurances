@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:assurance/currentcover.dart';
+import 'package:assurance/notification.dart';
 import 'package:assurance/retrievecover.dart';
 import 'package:assurance/userdata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -305,6 +306,22 @@ class _MenuState extends State<Menu> {
             backgroundColor: Colors.black54,
           ),
           title: Text("Update"),
+        ),
+        ListTile(
+          leading: CircleAvatar(
+            child: Icon(
+              Icons.notification_important,
+              color: Colors.white,
+            ),
+            backgroundColor: Colors.black54,
+          ),
+          title: Text("Notifications"),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Notifications()),
+            );
+          },
         ),
         ListTile(
           leading: CircleAvatar(

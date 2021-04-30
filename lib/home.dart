@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'menu.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:intl/intl.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title, this.uid}) : super(key: key);
@@ -24,6 +25,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  DateTime dateToday = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day) ;
+  String today =  "${DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute, DateTime.now().second, DateTime.now().millisecond)}";
   final auth = FirebaseAuth.instance;
   final databaseReference = Firestore.instance;
   final TextEditingController _filter = new TextEditingController();
@@ -34,10 +37,10 @@ class _MyHomePageState extends State<MyHomePage> {
   final FirebaseMessaging _fcm = FirebaseMessaging();
   List filteredNames = new List();
   Icon _searchIcon = new Icon(Icons.search);
-  Widget _appBarTitle = new Text( 'Assurance' );
-  String author,channel,web;
+  Widget _appBarTitle = new Text('Assurance');
+  String author, channel, web;
 
- /* _ExamplePageState() {
+  /* _ExamplePageState() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
         setState(() {
@@ -52,75 +55,126 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }*/
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _fcm.configure(
-      onMessage: (Map<String, dynamic> message)async{
+      onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         setState(() {
           _newNotificaions = true;
         });
-        final snackbar = SnackBar(content: Text(message['notification']['title']),
+        final snackbar = SnackBar(
+          content: Text(message['notification']['title']),
           action: SnackBarAction(
             label: 'Go',
-            onPressed: () => showDialog(context: context,
-                builder: (context)=> AlertDialog(
+            onPressed: () => showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      content: ListTile(
+                        title: Text(message['notification']['title']),
+                        subtitle: Text(message['title']['body']),
+                      ),
+                      actions: <Widget>[
+                        FlatButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text('OK'))
+                      ],
+                    )),
+          ),
+        );
+        Scaffold.of(context).showSnackBar(snackbar);
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
                   content: ListTile(
                     title: Text(message['notification']['title']),
                     subtitle: Text(message['title']['body']),
                   ),
-                  actions:<Widget> [
-                    FlatButton(onPressed: ()=> Navigator.of(context).pop(), child: Text('OK'))
+                  actions: <Widget>[
+                    FlatButton(
+                        onPressed: () async {
+                          String instructor =
+                              (await FirebaseAuth.instance.currentUser()).uid;
+                          await databaseReference
+                              .collection("Notification")
+                              .document(instructor).collection('Personal').document(today)
+                              .setData({
+                            'Title':
+                            message['data']['title'],
+                            'Text':
+                            message['data']['text'],
+                          }, merge: true).then((_) {
+                            Navigator.of(context).pop();
+                          });
+                        },
+                        child: Text('OK'))
                   ],
-                )
-            ),
-          ) ,
-        );
-        Scaffold.of(context).showSnackBar(snackbar);
-        showDialog(context: context,
-            builder: (context)=> AlertDialog(
-              content: ListTile(
-                title: Text(message['notification']['title']),
-                subtitle: Text(message['title']['body']),
-              ),
-              actions:<Widget> [
-                FlatButton(onPressed: ()=> Navigator.of(context).pop(), child: Text('OK'))
-              ],
-            )
-        );
+                ));
       },
-
-      onResume: (Map<String, dynamic> message)async{
+      onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
-        showDialog(context: context,
-            builder: (context)=> AlertDialog(
-              content: ListTile(
-                title: Text(message['notification']['title']),
-                subtitle: Text(message['title']['body']),
-               // title: Text(message['data']['text']),
-              //  subtitle: Text(message['data']['text']),
-              ),
-              actions:<Widget> [
-                FlatButton(onPressed: ()=> Navigator.of(context).pop(), child: Text('OK'))
-              ],
-            )
-        );
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  content: ListTile(
+                   // title: Text(message['notification']['title']),
+                    //subtitle: Text(message['title']['body']),
+                     title: Text(message['data']['title']),
+                      subtitle: Text(message['data']['text']),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                        onPressed: () async {
+                          String instructor =
+                              (await FirebaseAuth.instance.currentUser()).uid;
+                          await databaseReference
+                              .collection("Notification")
+                              .document(instructor).collection('Personal').document(today)
+                              .setData({
+                            'Title':
+                            message['data']['title'] ,
+                            'Text':
+                            message['data']['text'],
+                          }, merge: true).then((_) {
+                            Navigator.of(context).pop();
+                          });
+                        },
+                        child: Text('OK'))
+                  ],
+                ));
       },
-      onLaunch: (Map<String, dynamic> message)async{
+      onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
-        showDialog(context: context,
-            builder: (context)=> AlertDialog(
-              content: ListTile(
-                title: Text(message['notification']['Notification Title']),
-                subtitle: Text(message['notification']['Notification Text']),
-              //  title: Text(message['data']['text']),
-              //  subtitle: Text(message['data']['text']),
-              ),
-              actions:<Widget> [
-                FlatButton(onPressed: ()=> Navigator.of(context).pop(), child: Text('OK'))
-              ],
-            )
-        );
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  content: ListTile(
+                   // title: Text(message['notification']['Notification Title']),
+                    //subtitle:
+                      //  Text(message['notification']['Notification Text']),
+                      title: Text(message['data']['title']),
+                      subtitle: Text(message['data']['text']),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                        onPressed: () async {
+                          String instructor =
+                              (await FirebaseAuth.instance.currentUser()).uid;
+                          await databaseReference
+                              .collection("Notification")
+                              .document(instructor).collection('Personal').document(today)
+                              .setData({
+                            'Title':
+                                message['data']['title'],
+                            'Text':
+                                message['data']['text'],
+                          }, merge: true).then((_) {
+                            Navigator.of(context).pop();
+                          });
+                        },
+                        child: Text('OK'))
+                  ],
+                ));
       },
     );
     _saveDeviceToken() async {
@@ -133,17 +187,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
       // Save it to Firestore
     }
-    WidgetsBinding.instance.addPostFrameCallback((_)async {
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final remoteConfig = await RemoteConfig.instance;
-      final defaults = <String, dynamic>{
-       'author': 'Me',
-       'channel': 'You'
-      };
+      final defaults = <String, dynamic>{'author': 'Me', 'channel': 'You'};
       setState(() {
         author = defaults['author'];
         channel = defaults['channel'];
       });
-      await remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
+      await remoteConfig
+          .setConfigSettings(RemoteConfigSettings(debugMode: true));
       await remoteConfig.fetch(expiration: const Duration(hours: 0));
       await remoteConfig.activateFetched();
       setState(() {
@@ -152,11 +205,11 @@ class _MyHomePageState extends State<MyHomePage> {
         web = remoteConfig.getString('web');
       });
     });
-
   }
+
   _launch() async {
     String url = web;
-      //  "https://economictimes.indiatimes.com/small-biz/money/insurances-for-it-companies-why-you-need-it-and-how-to-go-about-it/articleshow/60709051.cms?from=mdr";
+    //  "https://economictimes.indiatimes.com/small-biz/money/insurances-for-it-companies-why-you-need-it-and-how-to-go-about-it/articleshow/60709051.cms?from=mdr";
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -164,63 +217,58 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-
   @override
- /* void initState() {
+  /* void initState() {
     this._getNames();
     super.initState();
   }*/
   Widget build(BuildContext context) {
-
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          leading: Builder(builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(
-                Icons.menu,
-                color: Colors.black,
-                size: 20.0,
-                semanticLabel: 'Menu',
-              ),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: MaterialLocalizations
-                  .of(context)
-                  .openAppDrawerTooltip,
-            );
-          }),
-          title: _appBarTitle,
-          /*title: Text(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: Builder(builder: (BuildContext context) {
+          return IconButton(
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.black,
+              size: 20.0,
+              semanticLabel: 'Menu',
+            ),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+          );
+        }),
+        title: _appBarTitle,
+        /*title: Text(
           "Assurance",
           style: TextStyle(color: Colors.black),
         ),*/
-          actions: <Widget>[
-            IconButton(
-              icon: _searchIcon,
-              color: Colors.black,
-              iconSize: 28.0,
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => SearchList()));
-              },),
-          ],
-        ),
-
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("images/path.jpg"),
-              fit: BoxFit.cover,
-            ),
+        actions: <Widget>[
+          IconButton(
+            icon: _searchIcon,
+            color: Colors.black,
+            iconSize: 28.0,
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SearchList()));
+            },
           ),
+        ],
+      ),
 
-
-          child: ListView(
-            children: <Widget>[
-              SizedBox(height: 10.0),
-             /* if(model.showMainBanner)
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("images/path.jpg"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: ListView(
+          children: <Widget>[
+            SizedBox(height: 10.0),
+            /* if(model.showMainBanner)
                 Container(
                   height: 80.0,
                   width: double.infinity,
@@ -228,210 +276,208 @@ class _MyHomePageState extends State<MyHomePage> {
                   margin: const EdgeInsets.symmetric(vertical: 15),
                   child: Text("Everything you need to cove yourself"),
                 ),*/
-              Text('Author: $author',style: TextStyle(color: Colors.white)),
-              Text('Channel: $channel',style: TextStyle(color: Colors.white)),
-              RichText(
-                  text: TextSpan(children: <TextSpan>[
-                    TextSpan(
-                        text: "Our Partner",
-                        style: TextStyle(color: Colors.white, fontSize: 20.0),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Partner()),
-                            );
-                          })
-                  ])),
-              RichText(
-                  text: TextSpan(children: <TextSpan>[
-                    TextSpan(
-                        text: "Web",
-                        style: TextStyle(color: Colors.white, fontSize: 20.0),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            _launch();
-                          })
-                  ])),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-
-                  InkWell(
-                    child: Card(
-                      child: Column(
-                        children: <Widget>[
-                          Image.asset("images/it.jpg",
-                              fit: BoxFit.cover, width: 190, height: 190),
-                          Text(
-                            "Insurances for IT Companies",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ],
-                      ),
+            Text('Author: $author', style: TextStyle(color: Colors.white)),
+            Text('Channel: $channel', style: TextStyle(color: Colors.white)),
+            RichText(
+                text: TextSpan(children: <TextSpan>[
+              TextSpan(
+                  text: "Our Partner",
+                  style: TextStyle(color: Colors.white, fontSize: 20.0),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Partner()),
+                      );
+                    })
+            ])),
+            RichText(
+                text: TextSpan(children: <TextSpan>[
+              TextSpan(
+                  text: "Web",
+                  style: TextStyle(color: Colors.white, fontSize: 20.0),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      _launch();
+                    })
+            ])),
+            SizedBox(height: 15.0),
+            Row(
+              children: <Widget>[
+                InkWell(
+                  child: Card(
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset("images/it.jpg",
+                            fit: BoxFit.cover, width: 190, height: 190),
+                        Text(
+                          "Insurances for IT Companies",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ],
                     ),
-                    onTap: () {
-                      Navigator.push(context, _launchURL());
-                    },
                   ),
-                  InkWell(
-                    child: Card(
-                      child: Column(
-                        children: <Widget>[
-                          Image.asset("images/whyassurance.jpg",
-                              fit: BoxFit.cover, width: 190, height: 190),
-                          Text(
-                            "What Is Insurance",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ],
-                      ),
+                  onTap: () {
+                    Navigator.push(context, _launchURL());
+                  },
+                ),
+                InkWell(
+                  child: Card(
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset("images/whyassurance.jpg",
+                            fit: BoxFit.cover, width: 190, height: 190),
+                        Text(
+                          "What Is Insurance",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ],
                     ),
-                    onTap: () {
-                      Navigator.push(context, _Insurance());
-                    },
                   ),
-                ],
-              ),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  InkWell(
-                    child: Card(
-                      child: Column(
-                        children: <Widget>[
-                          Image.asset("images/underwritting.jpg",
-                              fit: BoxFit.cover, width: 190, height: 190),
-                          Text(
-                            "Underwritting Benefits",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ],
-                      ),
+                  onTap: () {
+                    Navigator.push(context, _Insurance());
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 15.0),
+            Row(
+              children: <Widget>[
+                InkWell(
+                  child: Card(
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset("images/underwritting.jpg",
+                            fit: BoxFit.cover, width: 190, height: 190),
+                        Text(
+                          "Underwritting Benefits",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ],
                     ),
-                    onTap: () {
-                      Navigator.push(context, _Underwritting());
-                    },
                   ),
-                  InkWell(
-                    child: Card(
-                      child: Column(
-                        children: <Widget>[
-                          Image.asset("images/work.jpg",
-                              fit: BoxFit.cover, width: 190, height: 190),
-                          Text(
-                            "How insurance works",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ],
-                      ),
+                  onTap: () {
+                    Navigator.push(context, _Underwritting());
+                  },
+                ),
+                InkWell(
+                  child: Card(
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset("images/work.jpg",
+                            fit: BoxFit.cover, width: 190, height: 190),
+                        Text(
+                          "How insurance works",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ],
                     ),
-                    onTap: () {
-                      Navigator.push(context, _Work());
-                    },
                   ),
-                ],
-              ),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  InkWell(
-                    child: Card(
-                      child: Column(
-                        children: <Widget>[
-                          Image.asset("images/type.jpg",
-                              fit: BoxFit.cover, width: 190, height: 190),
-                          Text(
-                            "4 Necessaries Insurance ",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ],
-                      ),
+                  onTap: () {
+                    Navigator.push(context, _Work());
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 15.0),
+            Row(
+              children: <Widget>[
+                InkWell(
+                  child: Card(
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset("images/type.jpg",
+                            fit: BoxFit.cover, width: 190, height: 190),
+                        Text(
+                          "4 Necessaries Insurance ",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ],
                     ),
-                    onTap: () {
-                      Navigator.push(context, _TypeOfInsurance());
-                    },
                   ),
-                  InkWell(
-                    child: Card(
-                      child: Column(
-                        children: <Widget>[
-                          Image.asset("images/retirement.jpg",
-                              fit: BoxFit.cover, width: 190, height: 190),
-                          Text(
-                            "Insurance for Retirement",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ],
-                      ),
+                  onTap: () {
+                    Navigator.push(context, _TypeOfInsurance());
+                  },
+                ),
+                InkWell(
+                  child: Card(
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset("images/retirement.jpg",
+                            fit: BoxFit.cover, width: 190, height: 190),
+                        Text(
+                          "Insurance for Retirement",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ],
                     ),
-                    onTap: () {
-                      Navigator.push(context, _Retirement());
-                    },
                   ),
-                ],
-              ),
-              SizedBox(height: 15.0),
-              Row(
-                children: <Widget>[
-                  InkWell(
-                    child: Card(
-                      child: Column(
-                        children: <Widget>[
-                          Image.asset("images/top.jpg",
-                              fit: BoxFit.cover, width: 190, height: 190),
-                          Text(
-                            "Top 10 Insurers",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ],
-                      ),
+                  onTap: () {
+                    Navigator.push(context, _Retirement());
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 15.0),
+            Row(
+              children: <Widget>[
+                InkWell(
+                  child: Card(
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset("images/top.jpg",
+                            fit: BoxFit.cover, width: 190, height: 190),
+                        Text(
+                          "Top 10 Insurers",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ],
                     ),
-                    onTap: () {
-                      Navigator.push(context, _Top());
-                    },
                   ),
-                  InkWell(
-                    child: Card(
-                      child: Column(
-                        children: <Widget>[
-                          Image.asset("images/digitalization.jpg",
-                              fit: BoxFit.cover, width: 190, height: 190),
-                          Text(
-                            "Insurance Digitalization",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ],
-                      ),
+                  onTap: () {
+                    Navigator.push(context, _Top());
+                  },
+                ),
+                InkWell(
+                  child: Card(
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset("images/digitalization.jpg",
+                            fit: BoxFit.cover, width: 190, height: 190),
+                        Text(
+                          "Insurance Digitalization",
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ],
                     ),
-                    onTap: () {
-                      Navigator.push(context, _Digitalization());
-                    },
                   ),
-                ],
-              ),
-              SizedBox(height: 20.0),
-              RichText(
-                  text: TextSpan(children: <TextSpan>[
-                    TextSpan(
-                        text: "Others interesting topics on Insurance",
-                        style: TextStyle(color: Colors.white, fontSize: 15.0),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.push(context, _Topic());
-                          })
-                  ])),
-              SizedBox(height: 10.0)
-            ],
-          ),
+                  onTap: () {
+                    Navigator.push(context, _Digitalization());
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 20.0),
+            RichText(
+                text: TextSpan(children: <TextSpan>[
+              TextSpan(
+                  text: "Others interesting topics on Insurance",
+                  style: TextStyle(color: Colors.white, fontSize: 15.0),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      Navigator.push(context, _Topic());
+                    })
+            ])),
+            SizedBox(height: 10.0)
+          ],
         ),
+      ),
 
-        // This trailing comma makes auto-formatting nicer for build methods.
-        drawer: Menu(),
-      );
-
+      // This trailing comma makes auto-formatting nicer for build methods.
+      drawer: Menu(),
+    );
   }
+
   /*Widget _buildList() {
     if (!(_searchText.isEmpty)) {
       List tempList = new List();
@@ -460,20 +506,18 @@ class _MyHomePageState extends State<MyHomePage> {
         this._appBarTitle = new TextField(
           controller: _filter,
           decoration: new InputDecoration(
-              prefixIcon: new Icon(Icons.search),
-              hintText: 'Search...'
-          ),
+              prefixIcon: new Icon(Icons.search), hintText: 'Search...'),
         );
       } else {
         this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text( 'Assurance' );
+        this._appBarTitle = new Text('Assurance');
         filteredNames = names;
         _filter.clear();
       }
     });
   }
 
-  /*void _getNames() async {
+/*void _getNames() async {
     final response = await dio.get('https://swapi.co/api/people');
     List tempList = new List();
     for (int i = 0; i < response.data['results'].length; i++) {
@@ -668,4 +712,3 @@ return Scaffold(
     });
   }
 }*/
-

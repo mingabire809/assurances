@@ -5,18 +5,25 @@ import 'dart:io';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-class Notification extends StatefulWidget {
+
+import 'menu.dart';
+class Notifications extends StatefulWidget {
   @override
-  _NotificationState createState() => _NotificationState();
+  _NotificationsState createState() => _NotificationsState();
 }
 
-class _NotificationState extends State<Notification> {
+class _NotificationsState extends State<Notifications> {
   final Firestore _db = Firestore.instance;
   final FirebaseMessaging _fcm = FirebaseMessaging();
   @override
   void initState(){
     super.initState();
-    _fcm.configure(
+    getNotificationList().then((results) {
+      setState(() {
+        querySnapshot = results;
+      });
+    });
+   /* _fcm.configure(
       onMessage: (Map<String, dynamic> message)async{
         print("onMessage: $message");
         final snackbar = SnackBar(content: Text(message['notification']['title']),
@@ -66,8 +73,9 @@ class _NotificationState extends State<Notification> {
               )
           );
         },
-    );
+    );*/
   }
+  QuerySnapshot querySnapshot;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,7 +88,7 @@ appBar: AppBar(
           onPressed: () {
             Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyHomePage())
+                MaterialPageRoute(builder: (context) => Menu())
             );
           },
 
@@ -90,14 +98,38 @@ appBar: AppBar(
   title: Text("Notifications"),
 
 ),
-      body: Container(
-        child: ListView(
-          children:<Widget> [
-           // Text()
-          ],
-        ),
-      ),
+      body: _showNotifications()
     );
+  }
+  Widget _showNotifications() {
+    //check if querysnapshot is null
+    if (querySnapshot != null) {
+      return ListView.builder(
+        primary: false,
+        itemCount: querySnapshot.documents.length,
+        padding: EdgeInsets.all(12),
+        itemBuilder: (context, i) {
+          return Column(
+            children: <Widget>[
+//load data into widgets
+              SizedBox(height: 25.0),
+              Text("${querySnapshot.documents[i].data['Title']}"),
+              SizedBox(height: 10.0),
+              Text("${querySnapshot.documents[i].data['Text']}"),
+              SizedBox(height: 25.0),
+            ],
+          );
+        },
+      );
+    } else {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+  }
+  getNotificationList() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    return await Firestore.instance.collection('Notification').document(instructor).collection('Personal').getDocuments();
   }
   _saveDeviceToken() async {
     String instructor = (await FirebaseAuth.instance.currentUser()).uid;
