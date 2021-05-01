@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:assurance/locator.dart';
 import 'package:assurance/login.dart';
 import 'package:path/path.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,11 +34,14 @@ class _MenuState extends State<Menu> {
   File _image;
   final picker = ImagePicker();
   FirebaseUser currentUser;
+  String imageUrl;
   void inputData() async {
     final FirebaseUser user = await auth.currentUser();
     final uid = user.uid;
     // here you write the codes to input the data into firestore
   }
+  FirebaseStorage storage = FirebaseStorage.instance;
+  StorageReference storageReference = FirebaseStorage.instance.ref();
 
   Future pickImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -103,7 +107,8 @@ class _MenuState extends State<Menu> {
   }
 
 
-  void _showPicker(context) {
+  void _showPicker(context)  {
+
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -116,6 +121,7 @@ class _MenuState extends State<Menu> {
                       title: new Text('Gallery'),
                       onTap: () {
                         _imgFromGallery();
+
                         Navigator.of(context).pop();
                       }),
                   new ListTile(
@@ -123,6 +129,7 @@ class _MenuState extends State<Menu> {
                     title: new Text('Camera'),
                     onTap: () {
                       _imgFromCamera();
+
                       Navigator.of(context).pop();
                     },
                   ),
@@ -130,7 +137,9 @@ class _MenuState extends State<Menu> {
               ),
             ),
           );
+
         });
+
   }
   final databaseReference = Firestore.instance;
   Future<void> getData() async {
@@ -171,11 +180,15 @@ class _MenuState extends State<Menu> {
       currentAccountPicture: CircleAvatar(
         radius: 55,
         backgroundColor: Color(0xffFDCF09),
-        child: _image != null
+       child:  Image.network('${querySnapshot.data['Image Url']}', width: 100,
+         height: 100,
+         fit: BoxFit.cover,),
+       /* child: imageUrl != null
             ? ClipRRect(
                 borderRadius: BorderRadius.circular(50),
-                child: Image.file(
-                  _image,
+                child: Image.network(
+              //   imageUrl,
+                  '${querySnapshot.data['Image Url']}',
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
@@ -191,7 +204,7 @@ class _MenuState extends State<Menu> {
                   Icons.camera_alt,
                   color: Colors.grey[800],
                 ),
-              ),
+              ),*/
       ),
     );
 
@@ -277,7 +290,8 @@ class _MenuState extends State<Menu> {
           ),
           title: Text("Profile"),
           onTap: () {
-            _showPicker(context);
+           // _showPicker(context);
+            uploadImage();
             //uploadImageToFirebase(context);
           },
         ),
@@ -455,6 +469,46 @@ class _MenuState extends State<Menu> {
         color: Colors.white,
       ),
     );
+  }
+  uploadImage() async {
+    final _storage = FirebaseStorage.instance;
+    final _picker = ImagePicker();
+    PickedFile image;
+
+
+    //Check Permissions
+    await Permission.photos.request();
+
+    var permissionStatus = await Permission.photos.status;
+
+    if (permissionStatus.isGranted){
+      //Select Image
+      image = await _picker.getImage(source: ImageSource.gallery);
+      var file = File(image.path);
+
+      if (image != null){
+        //Upload to Firebase
+        var snapshot = await _storage.ref()
+            .child('folderName/imageName')
+            .putFile(file)
+            .onComplete;
+
+        var downloadUrl = await snapshot.ref.getDownloadURL();
+
+        setState(() {
+          imageUrl = downloadUrl;
+        });
+      } else {
+        print('No Path Received');
+      }
+
+    } else {
+      print('Grant Permissions and try again');
+    }
+
+
+
+
   }
 }
 

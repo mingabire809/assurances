@@ -1,13 +1,19 @@
 import 'package:assurance/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'home.dart';
 import 'login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:auth/auth.dart';
+
 class Registration extends StatefulWidget {
   final auth = FirebaseAuth.instance;
+
   void inputData() async {
     final FirebaseUser user = await auth.currentUser();
     final uid = user.uid;
@@ -24,7 +30,7 @@ class _RegistrationState extends State<Registration> {
   bool isDateSelected = false;
   DateTime birthDate; // instance of DateTime
   String birthDateInString;
-
+  String imageUrl;
   final _fullnameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phonenumberController = TextEditingController();
@@ -43,7 +49,6 @@ class _RegistrationState extends State<Registration> {
 
   @override
   Widget build(BuildContext context) {
-
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
@@ -63,271 +68,279 @@ class _RegistrationState extends State<Registration> {
         ),
       ),
       body: Container(
-        child: ListView(
-          children: <Widget>[
-            TextField(
-              controller: _fullnameController,
-              textCapitalization: TextCapitalization.words,
-              decoration: InputDecoration(
-                icon: Icon(Icons.person),
-                fillColor: Colors.white,
-                focusColor: Colors.white,
-                hintText: "My Full Name",
-                labelText: "Full Name*",
-                labelStyle: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-              cursorColor: Colors.black54,
-              style: TextStyle(
+          child: ListView(
+        children: <Widget>[
+          TextField(
+            controller: _fullnameController,
+            textCapitalization: TextCapitalization.words,
+            decoration: InputDecoration(
+              icon: Icon(Icons.person),
+              fillColor: Colors.white,
+              focusColor: Colors.white,
+              hintText: "My Full Name",
+              labelText: "Full Name*",
+              labelStyle: TextStyle(
                 color: Colors.black,
               ),
             ),
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(
-                icon: Icon(Icons.mail),
-                fillColor: Colors.white,
-                focusColor: Colors.white,
-                hintText: "name@email.com",
-                labelText: "E-mail*",
-                labelStyle: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-              keyboardType: TextInputType.emailAddress,
-              cursorColor: Colors.black54,
-              style: TextStyle(
+            cursorColor: Colors.black54,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          TextField(
+            controller: _emailController,
+            decoration: InputDecoration(
+              icon: Icon(Icons.mail),
+              fillColor: Colors.white,
+              focusColor: Colors.white,
+              hintText: "name@email.com",
+              labelText: "E-mail*",
+              labelStyle: TextStyle(
                 color: Colors.black,
               ),
             ),
-            TextField(
-              controller: _phonenumberController,
-              decoration: InputDecoration(
-                icon: Icon(Icons.phone),
-                fillColor: Colors.white,
-                focusColor: Colors.white,
-                prefixText: "+257",
-                hintText: "where to reach you",
-                labelText: "Phone Number*",
-                labelStyle: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-              keyboardType: TextInputType.phone,
-              cursorColor: Colors.black54,
-              style: TextStyle(
+            keyboardType: TextInputType.emailAddress,
+            cursorColor: Colors.black54,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          (imageUrl != null)
+              ? Image.network(imageUrl)
+              : Placeholder(
+                  fallbackHeight: 200.0, fallbackWidth: double.infinity),
+          FlatButton(
+              onPressed: () => uploadImage(),
+              child: Text('Upload your picture')),
+          SizedBox(
+            height: 10.0,
+          ),
+          TextField(
+            controller: _phonenumberController,
+            decoration: InputDecoration(
+              icon: Icon(Icons.phone),
+              fillColor: Colors.white,
+              focusColor: Colors.white,
+              prefixText: "+257",
+              hintText: "where to reach you",
+              labelText: "Phone Number*",
+              labelStyle: TextStyle(
                 color: Colors.black,
               ),
             ),
-            TextField(
-              controller: _professionController,
-              decoration: InputDecoration(
-                icon: Icon(Icons.work),
-                fillColor: Colors.white,
-                focusColor: Colors.white,
-                hintText: "Income Source",
-                labelText: "Profession*",
-                labelStyle: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-              keyboardType: TextInputType.text,
-              cursorColor: Colors.black54,
-              style: TextStyle(
+            keyboardType: TextInputType.phone,
+            cursorColor: Colors.black54,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          TextField(
+            controller: _professionController,
+            decoration: InputDecoration(
+              icon: Icon(Icons.work),
+              fillColor: Colors.white,
+              focusColor: Colors.white,
+              hintText: "Income Source",
+              labelText: "Profession*",
+              labelStyle: TextStyle(
                 color: Colors.black,
               ),
             ),
-            TextField(
-              controller: _addressController,
-              decoration: InputDecoration(
-                icon: Icon(Icons.home),
-                fillColor: Colors.white,
-                focusColor: Colors.white,
-                hintText: "Your residence",
-                labelText: "Address*",
-                labelStyle: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-              keyboardType: TextInputType.text,
-              cursorColor: Colors.black54,
-              style: TextStyle(
+            keyboardType: TextInputType.text,
+            cursorColor: Colors.black54,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          TextField(
+            controller: _addressController,
+            decoration: InputDecoration(
+              icon: Icon(Icons.home),
+              fillColor: Colors.white,
+              focusColor: Colors.white,
+              hintText: "Your residence",
+              labelText: "Address*",
+              labelStyle: TextStyle(
                 color: Colors.black,
               ),
             ),
-            SizedBox(
-              height: 20.0,
+            keyboardType: TextInputType.text,
+            cursorColor: Colors.black54,
+            style: TextStyle(
+              color: Colors.black,
             ),
-            GestureDetector(
-                child: new Icon(Icons.calendar_today),
-                onTap: () async {
-                  final datePick = await showDatePicker(
-                      context: context,
-                      initialDate: new DateTime.now(),
-                      firstDate: new DateTime(1900),
-                      lastDate: new DateTime(2100));
-                  if (datePick != null && datePick != birthDate) {
-                    setState(() {
-                      birthDate = datePick;
-                      isDateSelected = true;
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          GestureDetector(
+              child: new Icon(Icons.calendar_today),
+              onTap: () async {
+                final datePick = await showDatePicker(
+                    context: context,
+                    initialDate: new DateTime.now(),
+                    firstDate: new DateTime(1900),
+                    lastDate: new DateTime(2100));
+                if (datePick != null && datePick != birthDate) {
+                  setState(() {
+                    birthDate = datePick;
+                    isDateSelected = true;
 
-                      // put it here
-                      birthDateInString =
-                          "${birthDate.month}/${birthDate.day}/${birthDate.year}";
-                    });
-                  }
-                }),
-            Text(isDateSelected
-                ? DateFormat.yMMMd().format(birthDate)
-                : initValue),
-            SizedBox(
-              height: 30.0,
-            ),
-            new DropdownButton<String>(
-              hint: _dropDownValue == null
-                  ? Text('Select your Gender')
-                  : Text(
-                      _dropDownValue,
-                      style: TextStyle(color: Colors.black),
-                    ),
-              isExpanded: true,
-              iconSize: 30.0,
-              style: TextStyle(color: Colors.black),
-              items: ['Male', 'Female'].map(
-                (val) {
-                  return DropdownMenuItem<String>(
-                    value: val,
-                    child: Text(val),
-                  );
-                },
-              ).toList(),
-              onChanged: (val) {
-                setState(
-                  () {
-                    _dropDownValue = val;
-                  },
+                    // put it here
+                    birthDateInString =
+                        "${birthDate.month}/${birthDate.day}/${birthDate.year}";
+                  });
+                }
+              }),
+          Text(isDateSelected
+              ? DateFormat.yMMMd().format(birthDate)
+              : initValue),
+          SizedBox(
+            height: 30.0,
+          ),
+          new DropdownButton<String>(
+            hint: _dropDownValue == null
+                ? Text('Select your Gender')
+                : Text(
+                    _dropDownValue,
+                    style: TextStyle(color: Colors.black),
+                  ),
+            isExpanded: true,
+            iconSize: 30.0,
+            style: TextStyle(color: Colors.black),
+            items: ['Male', 'Female'].map(
+              (val) {
+                return DropdownMenuItem<String>(
+                  value: val,
+                  child: Text(val),
                 );
               },
+            ).toList(),
+            onChanged: (val) {
+              setState(
+                () {
+                  _dropDownValue = val;
+                },
+              );
+            },
+          ),
+          TextField(
+            controller: _passwordController,
+            decoration: InputDecoration(
+                icon: Icon(Icons.lock),
+                fillColor: Colors.white,
+                labelText: "Password",
+                hintText: "Password",
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                )),
+            maxLength: 12,
+            cursorColor: Colors.black12,
+            obscureText: true,
+            style: TextStyle(
+              color: Colors.black,
             ),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                  icon: Icon(Icons.lock),
-                  fillColor: Colors.white,
-                  labelText: "Password",
-                  hintText: "Password",
-                  labelStyle: TextStyle(
-                    color: Colors.black,
-                  )),
-              maxLength: 12,
-              cursorColor: Colors.black12,
-              obscureText: true,
-              style: TextStyle(
-                color: Colors.black,
+          ),
+          TextField(
+            controller: _repasswordController,
+            decoration: InputDecoration(
+                icon: Icon(Icons.lock),
+                fillColor: Colors.white,
+                labelText: "Confirm Password",
+                hintText: "Re-type password",
+                labelStyle: TextStyle(
+                  color: Colors.black,
+                )),
+            maxLength: 12,
+            cursorColor: Colors.black12,
+            obscureText: true,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          ButtonBar(children: <Widget>[
+            FlatButton(
+              child: Text("Cancel"),
+              color: Colors.black38,
+              shape: BeveledRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(7.0)),
               ),
+              onPressed: () {
+                _fullnameController.clear();
+                _emailController.clear();
+                _phonenumberController.clear();
+                _addressController.clear();
+                _professionController.clear();
+                _passwordController.clear();
+                _repasswordController.clear();
+              },
             ),
-            TextField(
-              controller: _repasswordController,
-              decoration: InputDecoration(
-                  icon: Icon(Icons.lock),
-                  fillColor: Colors.white,
-                  labelText: "Confirm Password",
-                  hintText: "Re-type password",
-                  labelStyle: TextStyle(
-                    color: Colors.black,
-                  )),
-              maxLength: 12,
-              cursorColor: Colors.black12,
-              obscureText: true,
-              style: TextStyle(
-                color: Colors.black,
+            RaisedButton(
+              child: Text("Register"),
+              color: Colors.lightBlueAccent,
+              shape: BeveledRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
               ),
+              onPressed: () {
+                if (_passwordController.text == _repasswordController.text) {
+                  auth
+                      .createUserWithEmailAndPassword(
+                          email: _emailController.text,
+                          password: _passwordController.text)
+                      .then((currentUser) => Firestore.instance
+                          .collection("users")
+                          .document(currentUser.user.uid)
+                          .setData({
+                            "Full name": _fullnameController.text,
+                            "Email": _emailController.text,
+                            "Phone Number": _phonenumberController.text,
+                            "Profession": _professionController.text,
+                            "Address": _addressController.text,
+                            "BirthDate": birthDateInString,
+                            "Gender": _dropDownValue,
+                            "Image Url": imageUrl,
+                          })
+                          .then((result) => {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MyHomePage()),
+                                    (_) => true),
+                                _fullnameController.clear(),
+                                _emailController.clear(),
+                                _phonenumberController.clear(),
+                                _professionController.clear(),
+                                _addressController.clear(),
+                                _passwordController.clear(),
+                                _repasswordController.clear(),
+                              })
+                          .catchError((err) => print(err)))
+                      .catchError((err) => print(err));
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text("Error"),
+                          content: Text("The passwords do not match"),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text("Close"),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            )
+                          ],
+                        );
+                      });
+                }
+              },
             ),
-            ButtonBar(
-              children: <Widget>[
-                FlatButton(
-                  child: Text("Cancel"),
-                  color: Colors.black38,
-                  shape: BeveledRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(7.0)),
-                  ),
-                  onPressed: () {
-                    _fullnameController.clear();
-                    _emailController.clear();
-                    _phonenumberController.clear();
-                    _addressController.clear();
-                    _professionController.clear();
-                    _passwordController.clear();
-                    _repasswordController.clear();
-                  },
-                ),
-                RaisedButton(
-                    child: Text("Register"),
-                    color: Colors.lightBlueAccent,
-                    shape: BeveledRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    ),
-                  onPressed: () {
-
-                      if (_passwordController.text ==
-                          _repasswordController.text) {
-
-
-                            auth.createUserWithEmailAndPassword(
-                            email: _emailController.text,
-                            password: _passwordController.text)
-                            .then((currentUser) => Firestore.instance
-                            .collection("users")
-                            .document(currentUser.user.uid)
-                            .setData({
-                          "Full name": _fullnameController.text,
-                          "Email": _emailController.text,
-                          "Phone Number": _phonenumberController.text,
-                          "Profession": _professionController.text,
-                          "Address": _addressController.text,
-                          "BirthDate": birthDateInString,
-                          "Gender": _dropDownValue,
-
-                        })
-                            .then((result) => {
-                          Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MyHomePage()),
-                                  (_) => true),
-                          _fullnameController.clear(),
-                          _emailController.clear(),
-                          _phonenumberController.clear(),
-                          _professionController.clear(),
-                          _addressController.clear(),
-                          _passwordController.clear(),
-                          _repasswordController.clear(),
-                        })
-                            .catchError((err) => print(err)))
-                            .catchError((err) => print(err));
-                      } else {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Error"),
-                                content: Text("The passwords do not match"),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    child: Text("Close"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  )
-                                ],
-                              );
-                            });
-                      }
-
-                  },
-                ),
-                   /* onPressed: () {
+            /* onPressed: () {
                       auth
                           .createUserWithEmailAndPassword(
                               email: _emailController.text,
@@ -337,23 +350,17 @@ class _RegistrationState extends State<Registration> {
                             builder: (context) => MyHomePage()));
                       });
                     }*/
-                    /*onPressed: () {
+            /*onPressed: () {
                     if (_passwordController.text != _repasswordController.text)
                       _showMyDialog();
                     else
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => MyHomePage()));
                   },*/
-      ]
-                    )
-              ],
-        )
-            ),
-
-        );
-
-
-
+          ])
+        ],
+      )),
+    );
   }
 
   Future<void> _showMyDialog() async {
@@ -382,5 +389,41 @@ class _RegistrationState extends State<Registration> {
         );
       },
     );
+  }
+
+  uploadImage() async {
+    final _storage = FirebaseStorage.instance;
+    final _picker = ImagePicker();
+    PickedFile image;
+    String name = _fullnameController.text;
+    //Check Permissions
+    await Permission.photos.request();
+
+    var permissionStatus = await Permission.photos.status;
+
+    if (permissionStatus.isGranted) {
+      //Select Image
+      image = await _picker.getImage(source: ImageSource.gallery);
+      var file = File(image.path);
+
+      if (image != null) {
+        //Upload to Firebase
+        var snapshot = await _storage
+            .ref()
+            .child('$name/User')
+            .putFile(file)
+            .onComplete;
+
+        var downloadUrl = await snapshot.ref.getDownloadURL();
+
+        setState(() {
+          imageUrl = downloadUrl;
+        });
+      } else {
+        print('No Path Received');
+      }
+    } else {
+      print('Grant Permissions and try again');
+    }
   }
 }

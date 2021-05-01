@@ -1,8 +1,13 @@
+
+import 'dart:io';
 import 'package:assurance/register.dart';
 import 'package:assurance/registercar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'category.dart';
 
@@ -14,9 +19,13 @@ class Car extends StatefulWidget{
 class _CarState extends State<Car>{
   String _dropDownCar;
   String _dropCover;
+  final noOfSeats = TextEditingController();
+  final plateNumber = TextEditingController();
+  final horsePower = TextEditingController();
+  final chassisNumber = TextEditingController();
   final auth = FirebaseAuth.instance;
   String today =  "${DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute)}";
-
+  String imageUrl;
   Widget _appBarTitle = new Text( 'Car');
   final databaseReference = Firestore.instance;
   void createRecord() async {
@@ -74,6 +83,10 @@ class _CarState extends State<Car>{
         .setData({
       'Type of Cover':'$_dropDownCar' ,
       'Period of cover':'$_dropCover' ,
+      'Plate Number' : plateNumber.text,
+      'Chassis Number': chassisNumber.text,
+      'Horse Power' : horsePower.text,
+      'Number Of Seats': noOfSeats.text,
       'Provider': '',
       'Starting Date': '',
       'Agreement': '',
@@ -88,6 +101,11 @@ class _CarState extends State<Car>{
         'Cover':'$_appBarTitle' ,
         'Type of Cover':'$_dropDownCar' ,
         'Period of cover':'$_dropCover' ,
+        'Plate Number' : plateNumber.text,
+        'Chassis Number': chassisNumber.text,
+        'Horse Power' : horsePower.text,
+        'Number Of Seats': noOfSeats.text,
+        'Car Picture Link':'$imageUrl' ,
         'Provider': '',
         'Starting Date': '',
         'Agreement': '',
@@ -170,6 +188,81 @@ class _CarState extends State<Car>{
               );
             },
           ),
+          SizedBox(height: 20.0,),
+          (imageUrl != null)
+              ? Image.network(imageUrl)
+              : Placeholder(fallbackHeight: 200.0,fallbackWidth: double.infinity),
+          FlatButton(onPressed:() => uploadImage(), child: Text('Upload Car Picture')),
+          SizedBox(height: 10.0,),
+          TextField(
+            controller: plateNumber,
+            textCapitalization: TextCapitalization.words,
+            decoration: InputDecoration(
+              fillColor: Colors.white,
+              focusColor: Colors.white,
+              hintText: "Plate Number",
+              labelStyle: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            cursorColor: Colors.black54,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 10.0,),
+          TextField(
+            controller: chassisNumber,
+            textCapitalization: TextCapitalization.words,
+            decoration: InputDecoration(
+              fillColor: Colors.white,
+              focusColor: Colors.white,
+              hintText: "Chassis Number",
+              labelStyle: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            cursorColor: Colors.black54,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 10.0,),
+          TextField(
+            controller: horsePower,
+            textCapitalization: TextCapitalization.words,
+            decoration: InputDecoration(
+              fillColor: Colors.white,
+              focusColor: Colors.white,
+              hintText: "Horse Power",
+              labelStyle: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            cursorColor: Colors.black54,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 10.0,),
+          TextField(
+            controller: noOfSeats,
+            decoration: InputDecoration(
+              fillColor: Colors.white,
+              focusColor: Colors.white,
+              hintText: "Number of Seats",
+
+              labelStyle: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            keyboardType: TextInputType.number,
+            cursorColor: Colors.black54,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 10.0,),
           ButtonBar(
             children: <Widget>[
               FlatButton(
@@ -199,5 +292,44 @@ class _CarState extends State<Car>{
     ),
   );
   }
+  uploadImage() async {
+    final _storage = FirebaseStorage.instance;
+    final _picker = ImagePicker();
+    PickedFile image;
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
 
+    //Check Permissions
+    await Permission.photos.request();
+
+    var permissionStatus = await Permission.photos.status;
+
+    if (permissionStatus.isGranted){
+      //Select Image
+      image = await _picker.getImage(source: ImageSource.gallery);
+      var file = File(image.path);
+
+      if (image != null){
+        //Upload to Firebase
+        var snapshot = await _storage.ref()
+            .child('${querySnapshot.data['Full name']}/Car')
+            .putFile(file)
+            .onComplete;
+
+        var downloadUrl = await snapshot.ref.getDownloadURL();
+
+        setState(() {
+          imageUrl = downloadUrl;
+        });
+      } else {
+        print('No Path Received');
+      }
+
+    } else {
+      print('Grant Permissions and try again');
+    }
+
+
+
+
+  }
 }
