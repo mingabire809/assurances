@@ -84,7 +84,7 @@ class _PensionState extends State<Pension>{
         'Name':' ${querySnapshot.data['Full name']}',
         'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
         'Email':'${querySnapshot.data['Email']}' ,
-        'Cover':'$_appBarTitle' ,
+        'Cover':'Pension Cover' ,
         'Period of cover':'$_dropDownTime' ,
         'Amount Assured': _amount.text,
         'Provider': '',

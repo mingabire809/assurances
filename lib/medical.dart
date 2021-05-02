@@ -124,7 +124,7 @@ class _MedicalState extends State<Medical>{
         'Name':' ${querySnapshot.data['Full name']}',
         'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
         'Email':'${querySnapshot.data['Email']}' ,
-        'Cover':'$_appBarTitle' ,
+        'Cover':'Medical Cover' ,
         'Type of Cover':'$_dropCover' ,
         'Period of cover':'$_dropDownVal' ,
         'Number of person under cover':'$_dropNumber',

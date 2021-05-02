@@ -89,7 +89,7 @@ class _LifeState extends State<Life>{
         'Name':' ${querySnapshot.data['Full name']}',
         'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
         'Email':'${querySnapshot.data['Email']}' ,
-        'Cover':'$_appBarTitle' ,
+        'Cover':'Life Cover' ,
         'Type of Cover':'$_dropDownTypeLife' ,
         'Period of cover':'$_dropDownTimeLife' ,
         'Amount Assured': _amount.text,

@@ -79,7 +79,7 @@ class _DisabilityState extends State<Disability>{
         'Name':' ${querySnapshot.data['Full name']}',
         'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
         'Email':'${querySnapshot.data['Email']}' ,
-        'Cover':'$_appBarTitle' ,
+        'Cover':'Disability Cover' ,
         'Amount Assured':_amount.text ,
         'Provider': '',
         'Starting Date': '',

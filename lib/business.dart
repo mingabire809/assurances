@@ -87,7 +87,7 @@ class _BusinessState extends State<Business>{
         'Name':' ${querySnapshot.data['Full name']}',
         'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
         'Email':'${querySnapshot.data['Email']}' ,
-        'Cover':'$_appBarTitle' ,
+        'Cover':'Business Cover' ,
         'Type of Cover':'$_dropDownBusiness' ,
         'Period of cover':'$_dropDownTimeBusiness' ,
         'Amount Assured':amount.text,

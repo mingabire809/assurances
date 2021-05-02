@@ -1,7 +1,8 @@
 
 
 import 'dart:io';
-
+import 'package:assurance/staff.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'registration.dart';
@@ -156,7 +157,8 @@ class _LoginState extends State<Login> {
                       /*  auth.signInWithEmailAndPassword(email: _usernameController.text, password: _passwordController.text).then((_){
                           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage()));
                         });*/
-                        _signInWithEmailAndPassword();
+                        //_signInWithEmailAndPassword();
+                        signInWithEmailAndPassword();
                       }
 
                     /*onPressed: () {
@@ -220,5 +222,33 @@ class _LoginState extends State<Login> {
         );
       },
     );
+  }
+  Future<void> signInWithEmailAndPassword() async{
+    //final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    //firebaseAuth
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _usernameController.text, password: _passwordController.text)
+          .then((currentUser) {
+        Firestore.instance
+            .collection('users')
+            .document(currentUser.user.uid)
+            .get()
+            .then((value) {
+          var userType = (value.data)['User Type'];
+          if (userType == "Staff") {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => Staff()));
+          }
+          else {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => MyHomePage()));
+          }
+        });
+      }
+      );
+    } catch (e) {
+  _showMyDialog(); // TODO: show dialog with error
+  }
   }
 }

@@ -83,7 +83,7 @@ class _HouseState extends State<House>{
         'Name':' ${querySnapshot.data['Full name']}',
         'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
         'Email':'${querySnapshot.data['Email']}' ,
-        'Cover':'$_appBarTitle' ,
+        'Cover':'House Cover' ,
         'Type of Cover':'$_dropDownType' ,
         'Period of cover':'$_dropDownPeriod' ,
         'Provider': '',

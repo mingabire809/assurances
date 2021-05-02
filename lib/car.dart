@@ -98,7 +98,7 @@ class _CarState extends State<Car>{
         'Name':' ${querySnapshot.data['Full name']}',
         'Phone Number':' ${querySnapshot.data['Phone Number']}' ,
         'Email':'${querySnapshot.data['Email']}' ,
-        'Cover':'$_appBarTitle' ,
+        'Cover':'Car Cover' ,
         'Type of Cover':'$_dropDownCar' ,
         'Period of cover':'$_dropCover' ,
         'Plate Number' : plateNumber.text,

@@ -303,6 +303,7 @@ class _RegistrationState extends State<Registration> {
                             "BirthDate": birthDateInString,
                             "Gender": _dropDownValue,
                             "Image Url": imageUrl,
+                             "User Type": "Customer",
                           })
                           .then((result) => {
                                 Navigator.pushAndRemoveUntil(
