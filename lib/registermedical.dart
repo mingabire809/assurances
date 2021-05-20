@@ -35,7 +35,7 @@ class _RegisterMedicalState extends State<RegisterMedical>{
           children: <Widget>[
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/coverbyinsurance.socabu.png"),
+                backgroundImage: AssetImage("images/socabu.png"),
               ),
               title: Text(
                 "SOCABU",
@@ -91,7 +91,7 @@ class _RegisterMedicalState extends State<RegisterMedical>{
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/coverbyinsurance.bicor.png"),
+                backgroundImage: AssetImage("images/bicor.png"),
               ),
               title: Text(
                 "BICOR",
@@ -119,7 +119,7 @@ class _RegisterMedicalState extends State<RegisterMedical>{
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/coverbyinsurance.jubilee.jpg"),
+                backgroundImage: AssetImage("images/jubilee.jpg"),
               ),
               title: Text(
                 "JUBILEE",
@@ -147,7 +147,7 @@ class _RegisterMedicalState extends State<RegisterMedical>{
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/coverbyinsurance.mfp.jpg"),
+                backgroundImage: AssetImage("images/mfp.jpg"),
               ),
               title: Text(
                 "MUTUELLE DE LA FONCTION PUBLIQUE",
@@ -175,7 +175,7 @@ class _RegisterMedicalState extends State<RegisterMedical>{
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/coverbyinsurance.solis.png"),
+                backgroundImage: AssetImage("images/solis.png"),
               ),
               title: Text(
                 "MUTUALITE SOLIS",
@@ -231,7 +231,7 @@ class _RegisterMedicalState extends State<RegisterMedical>{
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/coverbyinsurance.socar.jpg"),
+                backgroundImage: AssetImage("images/socar.jpg"),
               ),
               title: Text(
                 "SOCAR",
@@ -260,7 +260,7 @@ class _RegisterMedicalState extends State<RegisterMedical>{
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/coverbyinsurance.ucar.jpg"),
+                backgroundImage: AssetImage("images/ucar.jpg"),
               ),
               title: Text(
                 "UCAR",
