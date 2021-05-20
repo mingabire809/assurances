@@ -69,7 +69,7 @@ class _BusinessInsuranceState extends State<BusinessInsurance>{
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPageBic()),
                 );
               },
             ),
@@ -120,11 +120,11 @@ class _BusinessInsuranceState extends State<BusinessInsurance>{
     }
   }
 }
-class MapPage extends StatefulWidget {
+class MapPageBic extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MapPageState();
+  State<StatefulWidget> createState() => MapPageBicState();
 }
-class MapPageState extends State<MapPage> {
+class MapPageBicState extends State<MapPageBic> {
   BitmapDescriptor pinLocationIcon;
   Set<Marker> _markers = {};
   Completer<GoogleMapController> _controller = Completer();

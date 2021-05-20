@@ -2,6 +2,16 @@
 
 import 'dart:io';
 import 'package:assurance/staff.dart';
+import 'package:assurance/staff/ascomastaff.dart';
+import 'package:assurance/staff/bicorstaff.dart';
+import 'package:assurance/staff/businessinsurancestaff.dart';
+import 'package:assurance/staff/egivstaff.dart';
+import 'package:assurance/staff/jubileestaff.dart';
+import 'package:assurance/staff/mfpstaff.dart';
+import 'package:assurance/staff/socabustaff.dart';
+import 'package:assurance/staff/socarstaff.dart';
+import 'package:assurance/staff/solisstaff.dart';
+import 'package:assurance/staff/ucarstaff.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +29,11 @@ class _LoginState extends State<Login> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   String error ;
-
+  final GlobalKey<State> _loadingKey = GlobalKey<State>();
   @override
   // ignore: missing_return
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         leading: Builder(
@@ -153,11 +164,12 @@ class _LoginState extends State<Login> {
                     shape: BeveledRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     ),
-                      onPressed: (){
+                      onPressed: () async {
                       /*  auth.signInWithEmailAndPassword(email: _usernameController.text, password: _passwordController.text).then((_){
                           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage()));
                         });*/
                         //_signInWithEmailAndPassword();
+
                         signInWithEmailAndPassword();
                       }
 
@@ -224,6 +236,7 @@ class _LoginState extends State<Login> {
     );
   }
   Future<void> signInWithEmailAndPassword() async{
+
     //final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     //firebaseAuth
     try {
@@ -234,15 +247,97 @@ class _LoginState extends State<Login> {
             .collection('users')
             .document(currentUser.user.uid)
             .get()
-            .then((value) {
+            .then((value) async {
           var userType = (value.data)['User Type'];
           if (userType == "Staff") {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => Staff()));
+          //  Navigator.pushReplacementNamed(context, '/Staff');
+           /* Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => Staff()));*/
+            final GlobalKey<State> _loadingKey = GlobalKey<State>();
+           // showLoadingDialog(context, _loadingKey);
+            await Future.delayed(Duration(seconds: 8));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Staff()),
+            );
+          } else if (userType == "Ascoma Staff"){
+            await Future.delayed(Duration(seconds: 8));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => AscomaStaff()),
+            );
+          }
+          else if (userType == "Bicor Staff"){
+            await Future.delayed(Duration(seconds: 8));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => BicorStaff()),
+            );
+          }
+          else if (userType == "Business Insurance and Reinsurance Staff"){
+            await Future.delayed(Duration(seconds: 8));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => BusinessInsuranceStaff()),
+            );
+          }
+          else if (userType == "East Africa Global Insurance Staff"){
+            await Future.delayed(Duration(seconds: 8));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => EastAfricaStaff()),
+            );
+          }
+          else if (userType == "Jubilee Staff"){
+            await Future.delayed(Duration(seconds: 8));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => JubileeStaff()),
+            );
+          }
+          else if (userType == "Mfp Staff"){
+            await Future.delayed(Duration(seconds: 8));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MfpStaff()),
+            );
+          }
+          else if (userType == "Socabu Staff"){
+            await Future.delayed(Duration(seconds: 8));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => SocabuStaff()),
+            );
+          }
+          else if (userType == "Socar Staff"){
+            await Future.delayed(Duration(seconds: 8));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => SocarStaff()),
+            );
+          }
+          else if (userType == "Solis Staff"){
+            await Future.delayed(Duration(seconds: 8));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => SolisStaff()),
+            );
+          }
+          else if (userType == "Ucar Staff"){
+            await Future.delayed(Duration(seconds: 8));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => UcarStaff()),
+            );
           }
           else {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => MyHomePage()));
+           // Navigator.pushReplacementNamed(context, '/MyHomePage');
+           /* Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => MyHomePage()));*/
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MyHomePage()),
+            );
           }
         });
       }

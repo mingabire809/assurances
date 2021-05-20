@@ -37,7 +37,7 @@ class _UcarState extends State<Ucar>{
       body: Container(
         child: ListView(
           children:<Widget> [
-            Image.asset('images/ucar.jpg'),
+            Image.asset('images/coverbyinsurance.ucar.jpg'),
             SizedBox(height: 20.0,),
             /*ListTile(
               leading: CircleAvatar(
@@ -69,7 +69,7 @@ class _UcarState extends State<Ucar>{
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPageUcar()),
                 );
               },
             ),
@@ -120,11 +120,11 @@ class _UcarState extends State<Ucar>{
     }
   }
 }
-class MapPage extends StatefulWidget {
+class MapPageUcar extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MapPageState();
+  State<StatefulWidget> createState() => MapPageUcarState();
 }
-class MapPageState extends State<MapPage> {
+class MapPageUcarState extends State<MapPageUcar> {
   BitmapDescriptor pinLocationIcon;
   Set<Marker> _markers = {};
   Completer<GoogleMapController> _controller = Completer();
@@ -133,7 +133,7 @@ class MapPageState extends State<MapPage> {
 
     BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
-        'images/ucar.jpg').then((onValue) {
+        'images/coverbyinsurance.ucar.jpg').then((onValue) {
       pinLocationIcon = onValue;
     });
 
@@ -183,7 +183,7 @@ class _AboutUsState extends State<AboutUs> {
       body: Center(
         child: ListView(
           children: <Widget>[
-            Image.asset('images/ucar.jpg'),
+            Image.asset('images/coverbyinsurance.ucar.jpg'),
             SizedBox(height: 30.0),
             Text("",
               style: TextStyle(fontSize: 15.0),),
@@ -206,7 +206,7 @@ class _AboutUsState extends State<AboutUs> {
             ),
             ListTile(
                 leading: Icon(Icons.mail),
-                title: Text("info@ucar-vie.com"),
+                title: Text("info@coverbyinsurance.ucar-vie.com"),
               onTap: () => _launchURL('info.insurance@egic.bi', 'Flutter Email Test', 'Hello Flutter'),
             ),
             ListTile(

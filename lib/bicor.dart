@@ -37,7 +37,7 @@ class _BicorState extends State<Bicor>{
       body: Container(
         child: ListView(
           children:<Widget> [
-            Image.asset('images/bicor.png'),
+            Image.asset('images/coverbyinsurance.bicor.png'),
             SizedBox(height: 20.0,),
             /*ListTile(
               leading: CircleAvatar(
@@ -69,7 +69,7 @@ class _BicorState extends State<Bicor>{
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPageBicor()),
                 );
               },
             ),
@@ -120,11 +120,11 @@ class _BicorState extends State<Bicor>{
     }
   }
 }
-class MapPage extends StatefulWidget {
+class MapPageBicor extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MapPageState();
+  State<StatefulWidget> createState() => MapPageBicorState();
 }
-class MapPageState extends State<MapPage> {
+class MapPageBicorState extends State<MapPageBicor> {
   BitmapDescriptor pinLocationIcon;
   Set<Marker> _markers = {};
   Completer<GoogleMapController> _controller = Completer();
@@ -133,7 +133,7 @@ class MapPageState extends State<MapPage> {
 
     BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
-        'images/bicor.png').then((onValue) {
+        'images/coverbyinsurance.bicor.png').then((onValue) {
       pinLocationIcon = onValue;
     });
 
@@ -183,7 +183,7 @@ class _AboutUsState extends State<AboutUs>{
       body: Center(
         child: ListView(
           children:<Widget> [
-            Image.asset('images/bicor.png'),
+            Image.asset('images/coverbyinsurance.bicor.png'),
             SizedBox( height: 30.0),
             Text("Avec plus de 20 ans d’expérience, nous vous garantissons toujours les meilleurs conseils."
                 " Nous servons nos clients à tous les niveaux de leur organisation,"

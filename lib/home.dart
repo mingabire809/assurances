@@ -177,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ));
       },
     );
-    _saveDeviceToken() async {
+  /*  _saveDeviceToken() async {
       // Get the current user
       String uid = 'jeffd23';
       // FirebaseUser user = await _auth.currentUser();
@@ -186,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
       String fcmToken = await _fcm.getToken();
 
       // Save it to Firestore
-    }
+    }*/
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final remoteConfig = await RemoteConfig.instance;

@@ -38,7 +38,7 @@ class _SocabuState extends State<Socabu>{
       body: Container(
         child: ListView(
           children:<Widget> [
-            Image.asset('images/socabu.png'),
+            Image.asset('images/coverbyinsurance.socabu.png'),
             SizedBox(height: 20.0,),
            /*ListTile(
               leading: CircleAvatar(
@@ -70,7 +70,7 @@ class _SocabuState extends State<Socabu>{
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPageSocabu()),
                 );
               },
             ),
@@ -122,11 +122,11 @@ class _SocabuState extends State<Socabu>{
     }
   }
 }
-class MapPage extends StatefulWidget {
+class MapPageSocabu extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MapPageState();
+  State<StatefulWidget> createState() => MapPageSocabuState();
 }
-class MapPageState extends State<MapPage> {
+class MapPageSocabuState extends State<MapPageSocabu> {
   BitmapDescriptor pinLocationIcon;
   Set<Marker> _markers = {};
   Completer<GoogleMapController> _controller = Completer();
@@ -135,7 +135,7 @@ class MapPageState extends State<MapPage> {
 
     BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
-        'images/socabu.png').then((onValue) {
+        'images/coverbyinsurance.socabu.png').then((onValue) {
       pinLocationIcon = onValue;
     });
 
@@ -187,7 +187,7 @@ class _AboutUsState extends State<AboutUs>{
      body: Center(
        child: ListView(
          children:<Widget> [
-       Image.asset('images/socabu.png'),
+       Image.asset('images/coverbyinsurance.socabu.png'),
        SizedBox( height: 30.0),
            Text("To bring order to this sector and ensure protection of the heritage of individuals and businesses, the Government created SOCABU by Decree-Law No. 100/61 of June 29, 1977 and granted it a monopoly on the activity of insurance in Burundi."
 
@@ -208,8 +208,8 @@ class _AboutUsState extends State<AboutUs>{
            SizedBox(height: 10.0),
            ListTile(
                leading: Icon(Icons.web),
-               title: Text("https://socabu-assurances.com/"),
-               onTap: ()=> launch("https://socabu-assurances.com/")
+               title: Text("https://coverbyinsurance.socabu-assurances.com/"),
+               onTap: ()=> launch("https://coverbyinsurance.socabu-assurances.com/")
            ),
 
 

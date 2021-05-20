@@ -70,7 +70,7 @@ class _AscomaState extends State<Ascoma>{
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPageAscoma()),
                 );
               },
             ),
@@ -122,11 +122,11 @@ class _AscomaState extends State<Ascoma>{
   }
 
 }
-class MapPage extends StatefulWidget {
+class MapPageAscoma extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MapPageState();
+  State<StatefulWidget> createState() => MapPageAscomaState();
 }
-class MapPageState extends State<MapPage> {
+class MapPageAscomaState extends State<MapPageAscoma> {
   BitmapDescriptor pinLocationIcon;
   Set<Marker> _markers = {};
   Completer<GoogleMapController> _controller = Completer();

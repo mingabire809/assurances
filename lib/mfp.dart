@@ -37,7 +37,7 @@ class _MfpState extends State<Mfp>{
       body: Container(
         child: ListView(
           children:<Widget> [
-            Image.asset('images/mfp.jpg'),
+            Image.asset('images/coverbyinsurance.mfp.jpg'),
             SizedBox(height: 20.0,),
            /* ListTile(
               leading: CircleAvatar(
@@ -69,7 +69,7 @@ class _MfpState extends State<Mfp>{
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPageMfp()),
                 );
               },
             ),
@@ -120,11 +120,11 @@ class _MfpState extends State<Mfp>{
     }
   }
 }
-class MapPage extends StatefulWidget {
+class MapPageMfp extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MapPageState();
+  State<StatefulWidget> createState() => MapPageMfpState();
 }
-class MapPageState extends State<MapPage> {
+class MapPageMfpState extends State<MapPageMfp> {
   BitmapDescriptor pinLocationIcon;
   Set<Marker> _markers = {};
   Completer<GoogleMapController> _controller = Completer();
@@ -133,7 +133,7 @@ class MapPageState extends State<MapPage> {
 
     BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
-        'images/mfp.jpg').then((onValue) {
+        'images/coverbyinsurance.mfp.jpg').then((onValue) {
       pinLocationIcon = onValue;
     });
 
@@ -183,7 +183,7 @@ class _AboutUsState extends State<AboutUs> {
       body: Center(
         child: ListView(
           children: <Widget>[
-            Image.asset('images/mfp.jpg'),
+            Image.asset('images/coverbyinsurance.mfp.jpg'),
             SizedBox(height: 30.0),
             Text("",
               style: TextStyle(fontSize: 15.0),),
@@ -233,18 +233,18 @@ class _AboutUsState extends State<AboutUs> {
             ),
             ListTile(
                 leading: Icon(Icons.mail),
-                title: Text("pharma.mfp@gmail.com"),
+                title: Text("pharma.coverbyinsurance.mfp@gmail.com"),
               onTap: () {
                 Navigator.push(
                   context,
-                  _launchURL('pharma.mfp@gmail.com', 'Flutter Email Test', 'Hello Flutter'),
+                  _launchURL('pharma.coverbyinsurance.mfp@gmail.com', 'Flutter Email Test', 'Hello Flutter'),
                 );
               },
             ),
             ListTile(
                 leading: Icon(Icons.web),
-                title: Text("http://mfp-burundi.org/"),
-                onTap: () =>launch("http://mfp-burundi.org/"),
+                title: Text("http://coverbyinsurance.mfp-burundi.org/"),
+                onTap: () =>launch("http://coverbyinsurance.mfp-burundi.org/"),
             ),
 
 

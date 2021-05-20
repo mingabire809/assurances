@@ -46,6 +46,13 @@ dependencies:
   get_it: ^5.0.6
   firebase_messaging: ^6.0.16
   flutter_local_notifications: ^1.4.4+5
+  flutter_email_sender: ^2.2.2
+  flutter_sms: ^2.1.1
+  fluttertoast: ^4.0.1
+  toast: ^0.1.5
+  flutter_google_places: ^0.2.8
+  mailto: ^1.1.0
+
 
 
 

@@ -35,7 +35,7 @@ class _RegisterBusinessState extends State<RegisterBusiness>{
           children: <Widget>[
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/socabu.png"),
+                backgroundImage: AssetImage("images/coverbyinsurance.socabu.png"),
               ),
               title: Text(
                 "SOCABU",
@@ -91,7 +91,7 @@ class _RegisterBusinessState extends State<RegisterBusiness>{
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/bicor.png"),
+                backgroundImage: AssetImage("images/coverbyinsurance.bicor.png"),
               ),
               title: Text(
                 "BICOR",
@@ -119,7 +119,7 @@ class _RegisterBusinessState extends State<RegisterBusiness>{
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/jubilee.jpg"),
+                backgroundImage: AssetImage("images/coverbyinsurance.jubilee.jpg"),
               ),
               title: Text(
                 "JUBILEE",
@@ -147,7 +147,7 @@ class _RegisterBusinessState extends State<RegisterBusiness>{
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/mfp.jpg"),
+                backgroundImage: AssetImage("images/coverbyinsurance.mfp.jpg"),
               ),
               title: Text(
                 "MUTUELLE DE LA FONCTION PUBLIQUE",
@@ -175,7 +175,7 @@ class _RegisterBusinessState extends State<RegisterBusiness>{
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/solis.png"),
+                backgroundImage: AssetImage("images/coverbyinsurance.solis.png"),
               ),
               title: Text(
                 "MUTUALITE SOLIS",
@@ -231,7 +231,7 @@ class _RegisterBusinessState extends State<RegisterBusiness>{
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/socar.jpg"),
+                backgroundImage: AssetImage("images/coverbyinsurance.socar.jpg"),
               ),
               title: Text(
                 "SOCAR",
@@ -260,7 +260,7 @@ class _RegisterBusinessState extends State<RegisterBusiness>{
             ),
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage("images/ucar.jpg"),
+                backgroundImage: AssetImage("images/coverbyinsurance.ucar.jpg"),
               ),
               title: Text(
                 "UCAR",

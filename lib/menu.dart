@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:assurance/coverbyinsurance/cover.dart';
 import 'package:assurance/currentcover.dart';
 import 'package:assurance/notification.dart';
 import 'package:assurance/retrievecover.dart';
@@ -244,12 +245,34 @@ class _MenuState extends State<Menu> {
             backgroundImage: AssetImage("images/cover.jpg"),
           ),
           title: Text("Cover"),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Category()),
-            );
-          },
+          onTap: ()=> showDialog(
+            context: context,
+            builder: (_) {
+              return AlertDialog(
+                title: Text('Select Your type'),
+                actions: [
+                  FlatButton(
+                    onPressed: ()
+              {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Category()),
+                );
+              },
+                    child: Text('By Cover'),
+                  ),
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Cover()),
+                      );
+                    },
+                    child: Text('By company'),
+                  ),
+                ],
+              );
+            })
          /* onTap: () async {
             String instructor = (await FirebaseAuth.instance.currentUser()).uid;
             await databaseReference.collection("users")

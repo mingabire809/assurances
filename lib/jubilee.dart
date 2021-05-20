@@ -37,7 +37,7 @@ class _JubileeState extends State<Jubilee>{
       body: Container(
         child: ListView(
           children:<Widget> [
-            Image.asset('images/jubilee.jpg'),
+            Image.asset('images/coverbyinsurance.jubilee.jpg'),
             SizedBox(height: 20.0,),
             /*ListTile(
               leading: CircleAvatar(
@@ -69,7 +69,7 @@ class _JubileeState extends State<Jubilee>{
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPageJubilee()),
                 );
               },
             ),
@@ -120,11 +120,11 @@ class _JubileeState extends State<Jubilee>{
     }
   }
 }
-class MapPage extends StatefulWidget {
+class MapPageJubilee extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MapPageState();
+  State<StatefulWidget> createState() => MapPageJubileeState();
 }
-class MapPageState extends State<MapPage> {
+class MapPageJubileeState extends State<MapPageJubilee> {
   BitmapDescriptor pinLocationIcon;
   Set<Marker> _markers = {};
   Completer<GoogleMapController> _controller = Completer();
@@ -133,7 +133,7 @@ class MapPageState extends State<MapPage> {
 
     BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
-        'images/jubilee.jpg').then((onValue) {
+        'images/coverbyinsurance.jubilee.jpg').then((onValue) {
       pinLocationIcon = onValue;
     });
 
@@ -183,7 +183,7 @@ class _AboutUsState extends State<AboutUs>{
       body: Center(
         child: ListView(
           children:<Widget> [
-            Image.asset('images/jubilee.jpg'),
+            Image.asset('images/coverbyinsurance.jubilee.jpg'),
             SizedBox( height: 30.0),
             Text("From humble beginnings in 1937, "
                 "Jubilee Insurance has spread its sphere of influence throughout"

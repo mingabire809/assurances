@@ -37,7 +37,7 @@ class _SocarState extends State<Socar>{
       body: Container(
         child: ListView(
           children:<Widget> [
-            Image.asset('images/socar.jpg'),
+            Image.asset('images/coverbyinsurance.socar.jpg'),
             SizedBox(height: 20.0,),
            /* ListTile(
               leading: CircleAvatar(
@@ -69,7 +69,7 @@ class _SocarState extends State<Socar>{
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPageSocar()),
                 );
               },
             ),
@@ -121,11 +121,11 @@ class _SocarState extends State<Socar>{
   }
 
 }
-class MapPage extends StatefulWidget {
+class MapPageSocar extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MapPageState();
+  State<StatefulWidget> createState() => MapPageSocarState();
 }
-class MapPageState extends State<MapPage> {
+class MapPageSocarState extends State<MapPageSocar> {
   BitmapDescriptor pinLocationIcon;
   Set<Marker> _markers = {};
   Completer<GoogleMapController> _controller = Completer();
@@ -134,7 +134,7 @@ class MapPageState extends State<MapPage> {
 
     BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
-        'images/socar.jpg').then((onValue) {
+        'images/coverbyinsurance.socar.jpg').then((onValue) {
       pinLocationIcon = onValue;
     });
 
@@ -184,7 +184,7 @@ class _AboutUsState extends State<AboutUs> {
       body: Center(
         child: ListView(
           children: <Widget>[
-            Image.asset('images/socar.jpg'),
+            Image.asset('images/coverbyinsurance.socar.jpg'),
             SizedBox(height: 30.0),
             Text("La Société Commerciale d’Assurances et de Réassurance Vie "
                 "«SOCAR VIE s.a » en sigle est la première société d’assurance vie qui a été "

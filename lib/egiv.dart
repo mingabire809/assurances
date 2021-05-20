@@ -69,7 +69,7 @@ class _EastAfricaState extends State<EastAfrica>{
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPageEgiv()),
                 );
               },
             ),
@@ -120,11 +120,11 @@ class _EastAfricaState extends State<EastAfrica>{
     }
   }
 }
-class MapPage extends StatefulWidget {
+class MapPageEgiv extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MapPageState();
+  State<StatefulWidget> createState() => MapPageEgivState();
 }
-class MapPageState extends State<MapPage> {
+class MapPageEgivState extends State<MapPageEgiv> {
   BitmapDescriptor pinLocationIcon;
   Set<Marker> _markers = {};
   Completer<GoogleMapController> _controller = Completer();

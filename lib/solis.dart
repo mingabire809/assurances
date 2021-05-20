@@ -37,7 +37,7 @@ class _SolisState extends State<Solis>{
       body: Container(
         child: ListView(
           children:<Widget> [
-            Image.asset('images/solis.png'),
+            Image.asset('images/coverbyinsurance.solis.png'),
             SizedBox(height: 20.0,),
             /*ListTile(
               leading: CircleAvatar(
@@ -69,7 +69,7 @@ class _SolisState extends State<Solis>{
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MapPage()),
+                  MaterialPageRoute(builder: (context) => MapPageSolis()),
                 );
               },
             ),
@@ -121,11 +121,11 @@ class _SolisState extends State<Solis>{
   }
 
 }
-class MapPage extends StatefulWidget {
+class MapPageSolis extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => MapPageState();
+  State<StatefulWidget> createState() => MapPageSolisState();
 }
-class MapPageState extends State<MapPage> {
+class MapPageSolisState extends State<MapPageSolis> {
   BitmapDescriptor pinLocationIcon;
   Set<Marker> _markers = {};
   Completer<GoogleMapController> _controller = Completer();
@@ -134,7 +134,7 @@ class MapPageState extends State<MapPage> {
 
     BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5),
-        'images/solis.png').then((onValue) {
+        'images/coverbyinsurance.solis.png').then((onValue) {
       pinLocationIcon = onValue;
     });
 
@@ -184,7 +184,7 @@ class _AboutUsState extends State<AboutUs> {
       body: Center(
         child: ListView(
           children: <Widget>[
-            Image.asset('images/solis.png'),
+            Image.asset('images/coverbyinsurance.solis.png'),
             SizedBox(height: 30.0),
             Text("",
               style: TextStyle(fontSize: 15.0),),
@@ -198,8 +198,8 @@ class _AboutUsState extends State<AboutUs> {
             ),
             ListTile(
                 leading: Icon(Icons.web),
-                title: Text("http://www.solis.bi/"),
-                onTap: ()=> launch("http://www.solis.bi/")
+                title: Text("http://www.coverbyinsurance.solis.bi/"),
+                onTap: ()=> launch("http://www.coverbyinsurance.solis.bi/")
             ),
 
 
