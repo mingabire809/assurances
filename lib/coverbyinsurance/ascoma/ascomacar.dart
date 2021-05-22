@@ -420,7 +420,7 @@ class _AscomaCarConditionState extends State<AscomaCarCondition> {
                           .collection("users")
                           .document(instructor)
                           .collection('Cover')
-                          .document("Business")
+                          .document("House")
                           .updateData({
                         'Starting Date': '$birthDateInString',
                         'Agreement': 'I Agree that the following Insurance company'

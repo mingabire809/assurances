@@ -217,7 +217,7 @@ class _AscomaConditionDisabilityState extends State<AscomaConditionDisability> {
                           .collection("users")
                           .document(instructor)
                           .collection('Cover')
-                          .document("Business")
+                          .document("Disability")
                           .updateData({
                         'Starting Date': '$birthDateInString',
                         'Agreement': 'I Agree that the following Insurance company'
@@ -227,7 +227,7 @@ class _AscomaConditionDisabilityState extends State<AscomaConditionDisability> {
                         await databaseReference
                             .collection("Company")
                             .document("Ascoma")
-                            .collection('Car')
+                            .collection('Disability')
                             .document(today)
                             .updateData({
                           'Starting Date': '$birthDateInString',
