@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'home.dart';
 import 'login.dart';
+import 'package:custom_splash/custom_splash.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 class MyApp extends StatelessWidget {

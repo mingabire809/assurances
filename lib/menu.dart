@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:assurance/coverbyinsurance/cover.dart';
 import 'package:assurance/currentcover.dart';
+import 'package:assurance/event.dart';
 import 'package:assurance/notification.dart';
 import 'package:assurance/retrievecover.dart';
 import 'package:assurance/userdata.dart';
@@ -167,7 +168,13 @@ class _MenuState extends State<Menu> {
   }*/
 
   DocumentSnapshot querySnapshot;
-
+String name() {
+  if ({querySnapshot.data['Full name']} != null){
+   return querySnapshot.data['Full name'].toString();
+  }
+  else
+    return 'No current User';
+}
 
 
   @override
@@ -175,7 +182,7 @@ class _MenuState extends State<Menu> {
 
 
       var drawerHeader = UserAccountsDrawerHeader(
-      accountName: Text(' ${querySnapshot.data['Full name']}'),
+      accountName: /*Text(' ${querySnapshot.data['Full name']}')*/ Text(name()),
       accountEmail: Text(_email()),
       decoration: BoxDecoration(color: Colors.black38),
       currentAccountPicture: CircleAvatar(
@@ -343,6 +350,12 @@ class _MenuState extends State<Menu> {
             backgroundColor: Colors.black54,
           ),
           title: Text("Update"),
+          onTap:(){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Events()),
+            );
+          } ,
         ),
         ListTile(
           leading: CircleAvatar(

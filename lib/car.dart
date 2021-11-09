@@ -26,6 +26,7 @@ class _CarState extends State<Car>{
   final auth = FirebaseAuth.instance;
   String today =  "${DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute)}";
   String imageUrl;
+  int premium;
   Widget _appBarTitle = new Text( 'Car');
   final databaseReference = Firestore.instance;
   void createRecord() async {
@@ -66,6 +67,9 @@ class _CarState extends State<Car>{
     String instructor = (await FirebaseAuth.instance.currentUser()).uid;
     return await Firestore.instance.collection('users').document(instructor).get();
   }
+  carPremium() async {
+    return await Firestore.instance.collection('car').document('iernAIisjBFVIifRyzjD').get();
+  }
   void initState() {
     super.initState();
     getDetails().then((results) {
@@ -73,10 +77,36 @@ class _CarState extends State<Car>{
         querySnapshot = results;
       });
     });
+    carPremium().then((carFees){
+      setState(() {
+        fees = carFees;
+      });
+    });
   }
 
   DocumentSnapshot querySnapshot;
+  DocumentSnapshot fees;
   void car() async {
+    setState(() {
+
+      if(_dropDownCar == 'Liability coverage'){
+        premium = fees.data['Liability coverage'] as int;
+      }else if(_dropDownCar == 'Collision insurance'){
+        premium = fees.data['Collision insurance'] as int;
+      }else if(_dropDownCar == 'Comprehensive insurance'){
+        premium = fees.data['Comprehensive insurance'] as int;
+      }else if(_dropDownCar == 'Gap insurance'){
+        premium = fees.data['Gap insurance'] as int;
+      }else if(_dropDownCar == 'Medical payments coverage'){
+        premium = fees.data['Medical payments coverage'] as int;
+      }else if(_dropDownCar == 'Personal injury protection insurance'){
+        premium = fees.data['Personal injury protection insurance'] as int;
+      }else if(_dropDownCar == 'Underinsured motorist insurance'){
+        premium = fees.data['Underinsured motorist insurance'] as int;
+      }else{
+        premium = fees.data['Uninsured motorist insurance'] as int;
+      }
+    });
     String instructor = (await FirebaseAuth.instance.currentUser()).uid;
     await databaseReference.collection("users")
         .document(instructor).collection('Cover').document('Car')
@@ -90,6 +120,7 @@ class _CarState extends State<Car>{
       'Provider': '',
       'Starting Date': '',
       'Agreement': '',
+      'Premium': premium,
 
     }).then((_) async {
       await databaseReference.collection("Cover")
@@ -109,11 +140,15 @@ class _CarState extends State<Car>{
         'Provider': '',
         'Starting Date': '',
         'Agreement': '',
+        'Premium': premium,
 
       },merge: true);
     }).then((_) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => RegisterCar()));
+    });
+    setState(() {
+
     });
   }
   @override
@@ -191,7 +226,7 @@ class _CarState extends State<Car>{
           SizedBox(height: 20.0,),
           (imageUrl != null)
               ? Image.network(imageUrl)
-              : Placeholder(fallbackHeight: 200.0,fallbackWidth: double.infinity),
+              : Placeholder(fallbackHeight: 200.0,fallbackWidth: double.infinity,),
           FlatButton(onPressed:() => uploadImage(), child: Text('Upload Car Picture')),
           SizedBox(height: 10.0,),
           TextField(

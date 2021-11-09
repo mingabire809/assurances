@@ -52,6 +52,8 @@ dependencies:
   toast: ^0.1.5
   flutter_google_places: ^0.2.8
   mailto: ^1.1.0
+  custom_splash: ^0.0.2
+  shared_preferences: ^0.5.12+4
 
 
 

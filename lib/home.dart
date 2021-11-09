@@ -8,6 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'menu.dart';
@@ -25,8 +26,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  DateTime dateToday = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day) ;
-  String today =  "${DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute, DateTime.now().second, DateTime.now().millisecond)}";
+  final feedback = new TextEditingController();
+  final improving = new TextEditingController();
+  DateTime dateToday =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
+  String today =
+      "${DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute, DateTime.now().second, DateTime.now().millisecond)}";
   final auth = FirebaseAuth.instance;
   final databaseReference = Firestore.instance;
   final TextEditingController _filter = new TextEditingController();
@@ -39,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text('Assurance');
   String author, channel, web;
-
+bool isGridView = true;
   /* _ExamplePageState() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
@@ -57,6 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    getDetails().then((results) {
+      setState(() {
+        querySnapshot = results;
+      });
+    });
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
@@ -97,12 +108,12 @@ class _MyHomePageState extends State<MyHomePage> {
                               (await FirebaseAuth.instance.currentUser()).uid;
                           await databaseReference
                               .collection("Notification")
-                              .document(instructor).collection('Personal').document(today)
+                              .document(instructor)
+                              .collection('Personal')
+                              .document(today)
                               .setData({
-                            'Title':
-                            message['data']['title'],
-                            'Text':
-                            message['data']['text'],
+                            'Title': message['data']['title'],
+                            'Text': message['data']['text'],
                           }, merge: true).then((_) {
                             Navigator.of(context).pop();
                           });
@@ -117,10 +128,10 @@ class _MyHomePageState extends State<MyHomePage> {
             context: context,
             builder: (context) => AlertDialog(
                   content: ListTile(
-                   // title: Text(message['notification']['title']),
+                    // title: Text(message['notification']['title']),
                     //subtitle: Text(message['title']['body']),
-                     title: Text(message['data']['title']),
-                      subtitle: Text(message['data']['text']),
+                    title: Text(message['data']['title']),
+                    subtitle: Text(message['data']['text']),
                   ),
                   actions: <Widget>[
                     FlatButton(
@@ -129,12 +140,12 @@ class _MyHomePageState extends State<MyHomePage> {
                               (await FirebaseAuth.instance.currentUser()).uid;
                           await databaseReference
                               .collection("Notification")
-                              .document(instructor).collection('Personal').document(today)
+                              .document(instructor)
+                              .collection('Personal')
+                              .document(today)
                               .setData({
-                            'Title':
-                            message['data']['title'] ,
-                            'Text':
-                            message['data']['text'],
+                            'Title': message['data']['title'],
+                            'Text': message['data']['text'],
                           }, merge: true).then((_) {
                             Navigator.of(context).pop();
                           });
@@ -149,11 +160,11 @@ class _MyHomePageState extends State<MyHomePage> {
             context: context,
             builder: (context) => AlertDialog(
                   content: ListTile(
-                   // title: Text(message['notification']['Notification Title']),
+                    // title: Text(message['notification']['Notification Title']),
                     //subtitle:
-                      //  Text(message['notification']['Notification Text']),
-                      title: Text(message['data']['title']),
-                      subtitle: Text(message['data']['text']),
+                    //  Text(message['notification']['Notification Text']),
+                    title: Text(message['data']['title']),
+                    subtitle: Text(message['data']['text']),
                   ),
                   actions: <Widget>[
                     FlatButton(
@@ -162,12 +173,12 @@ class _MyHomePageState extends State<MyHomePage> {
                               (await FirebaseAuth.instance.currentUser()).uid;
                           await databaseReference
                               .collection("Notification")
-                              .document(instructor).collection('Personal').document(today)
+                              .document(instructor)
+                              .collection('Personal')
+                              .document(today)
                               .setData({
-                            'Title':
-                                message['data']['title'],
-                            'Text':
-                                message['data']['text'],
+                            'Title': message['data']['title'],
+                            'Text': message['data']['text'],
                           }, merge: true).then((_) {
                             Navigator.of(context).pop();
                           });
@@ -177,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ));
       },
     );
-  /*  _saveDeviceToken() async {
+    /*  _saveDeviceToken() async {
       // Get the current user
       String uid = 'jeffd23';
       // FirebaseUser user = await _auth.currentUser();
@@ -206,6 +217,16 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     });
   }
+
+  getDetails() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    return await Firestore.instance
+        .collection('users')
+        .document(instructor)
+        .get();
+  }
+
+  DocumentSnapshot querySnapshot;
 
   _launch() async {
     String url = web;
@@ -303,6 +324,106 @@ class _MyHomePageState extends State<MyHomePage> {
             ])),
             SizedBox(height: 15.0),
             Row(
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.list,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isGridView = false;
+                    });
+                  },
+                ),
+                IconButton(
+                    icon: Icon(
+                      Icons.grid_view,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                     isGridView = true;
+
+                      });
+                    })
+
+              ],
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: StreamBuilder(
+                stream: Firestore.instance.collection('Home').snapshots(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: const Text('Loading Data...'));
+                  }
+
+                  return isGridView? GridView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2),
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        child: Card(
+                          child: Column(
+                            children: <Widget>[
+                              Image.network(
+                                  snapshot.data.documents[index]['Image'],
+                                  fit: BoxFit.cover,
+                                  width: 190,
+                                  height: 179),
+                              Text(snapshot.data.documents[index]['Text']),
+                            ],
+                          ),
+                        ),
+                        onTap: () async {
+                          var url = snapshot.data.documents[index]['Url'];
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not launch $url';
+                          }
+                        },
+                      );
+                    },
+                    itemCount: snapshot.data.documents.length,
+                  ):ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            snapshot.data.documents[index]['Image'],
+                          ),
+                       radius: 27.0,
+                        ),
+                        title: Text(snapshot.data.documents[index]['Text'],style: TextStyle(color: Colors.white),),
+
+                        onTap: () async{
+
+                          var url = snapshot.data.documents[index]['Url'];
+                          if (await canLaunch(url)) {
+                          await launch(url);
+                          } else {
+                          throw 'Could not launch $url';
+                          }
+                        },
+
+                      );
+
+                    },
+                    itemCount: snapshot.data.documents.length,
+                  );
+                },
+              ),
+            ),
+
+            /* Row(
               children: <Widget>[
                 InkWell(
                   child: Card(
@@ -456,7 +577,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 ),
               ],
-            ),
+            ),*/
             SizedBox(height: 20.0),
             RichText(
                 text: TextSpan(children: <TextSpan>[
@@ -466,6 +587,72 @@ class _MyHomePageState extends State<MyHomePage> {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       Navigator.push(context, _Topic());
+                    })
+            ])),
+            SizedBox(height: 10.0),
+            RichText(
+                text: TextSpan(children: <TextSpan>[
+              TextSpan(
+                  text: "Share Feedback",
+                  style: TextStyle(color: Colors.white, fontSize: 15.0),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return AlertDialog(
+                              title: Text('Share Feedback'),
+                              content: new Column(
+                                children: <Widget>[
+                                  TextField(
+                                    textCapitalization:
+                                        TextCapitalization.words,
+                                    controller: feedback,
+                                    decoration: InputDecoration(
+                                      hintText:
+                                          "What's your experience with the application?",
+                                    ),
+                                  ),
+                                  TextField(
+                                    textCapitalization:
+                                        TextCapitalization.words,
+                                    controller: improving,
+                                    decoration: InputDecoration(
+                                      hintText: "How can we improve it? ",
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              actions: [
+                                FlatButton(
+                                  onPressed: () async {
+                                    String id = (await FirebaseAuth.instance
+                                            .currentUser())
+                                        .uid;
+                                    Firestore.instance
+                                        .collection("Feedback")
+                                        .document(today)
+                                        .setData({
+                                      'Name':
+                                          ' ${querySnapshot.data['Full name']}',
+                                      'Experience': feedback.text,
+                                      'Improving Suggestion': improving.text,
+                                    });
+                                    Fluttertoast.showToast(
+                                        msg: 'Thank you for your feedback!',
+                                        toastLength: Toast.LENGTH_SHORT);
+                                    Navigator.pop(context, false);
+                                  },
+                                  /*onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Login()));
+                      },*/ //
+
+                                  child: Text('Submit'),
+                                ),
+                              ],
+                            );
+                          });
                     })
             ])),
             SizedBox(height: 10.0)

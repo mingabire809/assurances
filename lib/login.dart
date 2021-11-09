@@ -1,5 +1,6 @@
 
 
+import 'dart:convert';
 import 'dart:io';
 import 'package:assurance/staff.dart';
 import 'package:assurance/staff/ascomastaff.dart';
@@ -18,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'registration.dart';
 import 'home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 class Login extends StatefulWidget {
 
   @override
@@ -28,8 +30,42 @@ class _LoginState extends State<Login> {
   final auth = FirebaseAuth.instance;
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final databaseReference = Firestore.instance;
   String error ;
   final GlobalKey<State> _loadingKey = GlobalKey<State>();
+  Future printIps() async {
+    String instructor = (await FirebaseAuth.instance.currentUser()).uid;
+    for (var interface in await NetworkInterface.list()) {
+      print('== Interface: ${interface.name} ==');
+      await databaseReference.collection("users")
+          .document(instructor)
+          .updateData({
+        'Current Ipv4 address':'== Interface: ${interface.name} ==',
+
+      });
+      for (var addr in interface.addresses) {
+
+        print(
+            '${addr.address} ${addr.host} ${addr.isLoopback} ${addr.rawAddress} ${addr.type.name}');
+        await databaseReference.collection("users")
+            .document(instructor)
+            .updateData({
+          'Current Ipv6 address':'${addr.address} ${addr.host} ${addr.isLoopback} ${addr.rawAddress} ${addr.type.name}',
+
+        });
+      }
+    }
+  }
+  Future<String> lookupUserCountry() async {
+    final response = await http.get('https://api.ipregistry.co?key=tryout');
+
+    if (response.statusCode == 200) {
+      print(json.decode(response.body)['location']['country']['name']);
+
+    } else {
+      throw Exception('Failed to get user country from IP address');
+    }
+  }
   @override
   // ignore: missing_return
   Widget build(BuildContext context) {
@@ -341,7 +377,10 @@ class _LoginState extends State<Login> {
           }
         });
       }
-      );
+      ).then((_) {
+        printIps();
+        lookupUserCountry();
+      });
     } catch (e) {
   _showMyDialog(); // TODO: show dialog with error
   }
